@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'otp_code',
+        'otp_expires_at',
+        'is_verified',
+        'group_id', // ✅ tambahin ini
     ];
 
     /**
@@ -44,5 +48,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relasi ke Group
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
     }
 }
