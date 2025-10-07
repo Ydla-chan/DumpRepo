@@ -10,7 +10,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('notulen_id')->constrained('notulens')->onDelete('cascade');
             $table->string('judul');
-            $table->text('')->nullable();
             $table->timestamps();
         });
     }

@@ -98,28 +98,46 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // --- CALENDAR & INITIALIZATION ---
-    if (calendarEl) {
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: "dayGridMonth",
-            headerToolbar: {
-                left: 'prev,next',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-            },
-            events: events, // Menggunakan data dari controller
-            locale: "id",
-            height: "auto",
-            dateClick: (info) => displayEventsForDate(info.date),
-            eventClick: function (info) {
-                displayEventsForDate(info.event.start);
-            },
-            initialDate: today,
-            dayMaxEvents: true,
-        });
-        calendar.render();
-    } else {
-        console.error("Elemen kalender dengan ID 'calendar' tidak ditemukan.");
-    }
+   if (calendarEl) {
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        headerToolbar: {
+            left: 'prev,next',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        },
+        events: events, // Menggunakan data dari controller
+        locale: "id",
+        height: "auto",
+        dateClick: (info) => displayEventsForDate(info.date),
+        eventClick: async function(info) {
+            const rapatId = info.event.id; // pastikan event.id berisi ID rapat
+            if (!rapatId || !detailModal) return;
+
+            // Tampilkan modal dan spinner
+            detailModal.classList.remove('hidden');
+            modalSpinner.style.display = 'block';
+            modalContent.style.display = 'none';
+
+            try {
+                const response = await fetch(`/rapat/${rapatId}/details`);
+                if (!response.ok) throw new Error('Gagal mengambil data rapat.');
+
+                const data = await response.json();
+                populateModal(data); // isi modal dengan data
+            } catch (error) {
+                console.error(error);
+                modalContent.innerHTML = '<p class="text-red-500 text-center">Terjadi kesalahan saat memuat data.</p>';
+            } finally {
+                modalSpinner.style.display = 'none';
+                modalContent.style.display = 'block';
+            }
+        },
+        initialDate: today,
+        dayMaxEvents: true,
+    });
+    calendar.render();
+}
 
     // --- EVENT LISTENERS ---
     filterButtonsContainer.addEventListener('click', (e) => {

@@ -53,15 +53,15 @@
             @csrf
             <div>
                 <label class="block text-sm font-medium">Nama</label>
-                <input type="text" name="name" required class="w-full p-2 border rounded-lg">
+                <input type="text" name="name" required class="w-full p-2 border rounded-lg" placeholder="Masukkan Nama Lengkap">
             </div>
             <div>
                 <label class="block text-sm font-medium">Email</label>
-                <input type="email" name="email" required class="w-full p-2 border rounded-lg">
+                <input type="email" name="email" required class="w-full p-2 border rounded-lg" placeholder="Masukkan Alamat Email">
             </div>
             <div>
                 <label class="block text-sm font-medium">Password</label>
-                <input type="password" name="password" required class="w-full p-2 border rounded-lg">
+                <input type="password" name="password" required class="w-full p-2 border rounded-lg" placeholder="Masukkan Password">
             </div>
             <button type="submit"
                 class="w-full flex items-center justify-center gap-2 px-4 py-2   bg-custom-teal text-white rounded-lg md:rounded-lg shadow-md hover:bg-custom-teal-dark transition-all duration-300">

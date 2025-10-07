@@ -85,9 +85,16 @@
                 </div>
 
                 <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                      <div>
+                        <label for="agenda" class="block text-sm font-medium text-slate-700">Judul Rapat</label>
+                        <input type="textbox" id="agenda" name="agenda" class="mt-1 block w-full border-slate-300 rounded-md shadow-sm focus:outline-none " placeholder="Masukkan Judul Rapat" re>
+                    </div>
                     <div>
-                        <label for="agenda" class="block text-sm font-medium text-slate-700">Agenda Rapat</label>
-                        <input type="text" id="agenda" name="agenda" class="mt-1 block w-full border-slate-300 rounded-md shadow-sm focus:outline-none " required>
+                        <label for="agenda" class="block text-sm font-medium text-slate-700">Point Pembahasan</label>
+                        {{-- <input type="textbox" id="agenda" name="agenda" class="mt-1 block w-full border-slate-300 rounded-md shadow-sm focus:outline-none " placeholder="Masukkan Point Pembahasan" required> --}}
+                            <textarea name="agenda" id="agenda" class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none" placeholder="Masukkan poin-poin rapat" rows="4"></textarea>
+
+
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
@@ -132,7 +139,7 @@
                             </fieldset>
                             <div id="attachLinkContainer">
                                 <label for="link" class="block text-sm font-medium text-slate-700 sr-only">Link Meeting</label>
-                                <input type="url" id="link" name="link" class="block w-full rounded-md border-slate-300 focus:outline-none focus:border-[#4C8C86]" placeholder="https://meet.google.com/xyz-abcd-efg">
+                                <input type="url" id="link" name="link" class="block w-full rounded-md border-slate-300 focus:outline-none focus:border-[#4C8C86]" placeholder="Masukkan Link Meeting">
                             </div>
                             <div id="generateZoomContainer" class="hidden">
                                 <button type="button" class="w-full flex justify-center items-center gap-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
@@ -157,6 +164,8 @@
             </form>
         </div>
     </div>
+
+    
 @endsection
 <script>
 const memberGroups = {

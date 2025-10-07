@@ -46,11 +46,11 @@
             @csrf
             <div>
                 <label class="block text-sm font-medium">Email</label>
-                <input type="email" name="email" required class="w-full p-2 border rounded-lg focus:outline-none" placeholder="Masukkan email Anda" >
+                <input type="email" name="email" required class="w-full p-2 border rounded-lg focus:outline-none" placeholder="Masukkan email " >
             </div>
             <div>
                 <label class="block text-sm font-medium">Password</label>
-                <input type="password" name="password" required class="w-full p-2 border rounded-lg focus:outline-none" placeholder="Masukkan password Anda" >
+                <input type="password" name="password" required class="w-full p-2 border rounded-lg focus:outline-none" placeholder="Masukkan password " >
             </div>
             <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2   bg-custom-teal text-white rounded-lg md:rounded-lg shadow-md hover:bg-custom-teal-dark transition-all duration-300">
                 Login

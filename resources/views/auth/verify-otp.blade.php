@@ -60,7 +60,7 @@
                 <label class="block text-sm font-medium mb-1">Masukkan Kode OTP</label>
                 <input type="number" name="otp" required maxlength="6"
                     oninput="if(this.value.length > 6) this.value=this.value.slice(0,6)"
-                    class="w-full p-3 border rounded-lg text-center text-xl tracking-widest focus:ring focus:ring-blue-200" placeholder="Masukan Kode OTP">
+                    class="w-full p-3 border rounded-lg text-center text-xl tracking-widest focus:ring focus:ring-blue-200" placeholder="Masukkan Kode OTP">
             </div>
             
             <button type="submit"

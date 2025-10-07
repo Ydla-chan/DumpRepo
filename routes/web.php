@@ -57,7 +57,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 route::view('/daftar', 'auth.daftar')->name('daftar');
 route::view('/masuk', 'masuk')->name('masuk');
 
-route::get('/dashboard',  [DashboardController::class, 'index'])->name('dashboard');
+route::get('/dashboard',  [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
 
 Route::post('/rapat', [RapatController::class, 'store'])->name('rapat.store');
@@ -87,13 +87,13 @@ route::view('/testview', 'global.dashboard')->middleware('auth')->name('testview
 
 
 
-Route::get('/admin', function () {
-    return view('admin');
-})->middleware(['auth', 'role:admin'])->name('admin.dashboard');
+// Route::get('/admin', function () {
+//     return view('admin');
+// })->middleware(['auth', 'role:admin'])->name('admin.dashboard');
 
-Route::get('/user', function () {
-    return view('user');
-})->middleware(['auth', 'role:user'])->name('user.dashboard');
+// Route::get('/user', function () {
+//     return view('user');
+// })->middleware(['auth', 'role:user'])->name('user.dashboard');
 
 
 
