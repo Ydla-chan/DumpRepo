@@ -10,42 +10,34 @@ class GroupController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * Menampilkan semua grup beserta anggotanya.
      */
     public function index()
     {
-        // Ambil semua group beserta user anggotanya
         $groups = Group::with('users')->get();
-        $users = User::whereNull('group_id')->get(); // user yg belum punya kelompok
+    $users = User::all(); // ← penting agar modal bisa menampilkan semua user
 
-        return view('admin.groupmanagement', compact('groups', 'users'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $users = User::whereNull('group_id')->get();
-        return view('admin.groupmanagement', compact('users'));
+    return view('admin.groupmanagement', compact('groups', 'users'));
     }
 
     /**
      * Store a newly created resource in storage.
+     * Menyimpan grup baru ke database.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'name'   => 'required|string|max:255|unique:groups,name',
-            'users'  => 'array',
-            'users.*'=> 'exists:users,id',
+            'name'    => 'required|string|max:255|unique:groups,name',
+            'users'   => 'array|nullable',
+            'users.*' => 'exists:users,id',
         ]);
 
-        // Buat kelompok
+        // Buat grup baru
         $group = Group::create([
             'name' => $request->name,
         ]);
 
-        // Tambahkan user ke group
+        // Tambahkan user ke grup
         if ($request->has('users')) {
             User::whereIn('id', $request->users)
                 ->update(['group_id' => $group->id]);
@@ -55,54 +47,63 @@ class GroupController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Group $group)
-    {
-        $group->load('users'); // ambil user dalam group
-        return view('admin.groupmanagement', compact('group'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Menampilkan data grup dan user dalam bentuk JSON untuk modal edit.
+     * Digunakan oleh AJAX saat klik tombol edit.
      */
     public function edit(Group $group)
     {
         $group->load('users');
-        $users = User::all(); // semua user, bisa pilih ulang
+    $users = User::all();
+
+
+        // Jika permintaan dari AJAX, kirim JSON
+        if (request()->ajax()) {
+            return response()->json([
+                'group' => $group,
+                'users' => $users,
+            ]);
+        }
+
+        // Jika bukan AJAX (fallback)
         return view('admin.groupmanagement', compact('group', 'users'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update data grup dan anggota.
      */
-  // GroupsController.php
-public function update(Request $request, Group $group)
+    public function update(Request $request, Group $group)
 {
     $request->validate([
-        'name' => 'required|string|max:255',
-        'users' => 'array', // optional, bisa kosong
+        'name'    => 'required|string|max:255',
+        'users'   => 'array|nullable',
         'users.*' => 'exists:users,id',
     ]);
 
     // Update nama grup
     $group->update(['name' => $request->name]);
 
-    // Sync users (menambahkan yang baru, menghapus yang tidak dicentang)
-    $group->users()->sync($request->users ?? []);
+    // Lepas semua user lama dari grup ini
+    User::where('group_id', $group->id)->update(['group_id' => null]);
 
-    return redirect()->route('groups.index')->with('success', 'Group updated successfully!');
+    // Masukkan user baru
+    if ($request->has('users')) {
+        User::whereIn('id', $request->users)->update(['group_id' => $group->id]);
+    }
+
+    return redirect()->route('groups.index')->with('success', 'Kelompok berhasil diperbarui.');
 }
 
     /**
-     * Remove the specified resource from storage.
+     * Hapus grup dan lepaskan anggotanya.
      */
     public function destroy(Group $group)
     {
-        // Lepaskan semua user dari group sebelum delete
+        // Lepas semua user dari grup
         User::where('group_id', $group->id)->update(['group_id' => null]);
 
+        // Hapus grup
         $group->delete();
+
         return redirect()->route('groups.index')->with('success', 'Kelompok berhasil dihapus.');
     }
 }

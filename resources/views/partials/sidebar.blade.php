@@ -12,29 +12,43 @@
                 </svg>
             </button>
         </div>
-        <nav class="flex-1 p-4 space-y-2">
-            <a href="/home" class="flex items-center space-x-3 p-2 rounded-lg bg-[#E5F2F1] text-[#4C8C86] font-semibold transition-colors duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                </svg>
-                <span class="nav-text">Dashboard</span>
-            </a>
-            <a href="/rapatrekap" class="flex items-center space-x-3 p-2 rounded-lg text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B] transition-colors duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-                </svg>
-                <span class="nav-text">Rekap Rapat</span>
-            </a>
-            <a href="#" class="flex items-center space-x-3 p-2 rounded-lg text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B] transition-colors duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
-                </svg>
-                <span class="nav-text">Rekap Notulensi</span>
-            </a>
-                {{-- Menu khusus admin --}}
-    {{-- @if(Auth::user()->role === 'admin')
-        <a href="/kelompok" class="flex items-center space-x-3 p-2 rounded-lg text-slate-600 hover:bg-[#E5F2F1]">
+     <nav class="flex-1 p-4 space-y-2">
+    <!-- Dashboard -->
+    <a href="/dashboard"
+       class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
+       {{ Request::is('dashboard') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+        </svg>
+        <span class="nav-text">Dashboard</span>
+    </a>
+
+    <!-- Rekap Rapat -->
+    <a href="/rapatrekap"
+       class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
+       {{ Request::is('rapatrekap*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+        </svg>
+        <span class="nav-text">Rekap Rapat</span>
+    </a>
+
+    <!-- Rekap Notulensi -->
+    <a href="/viewnotuleen"
+       class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
+       {{ Request::is('viewnotuleen*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+        </svg>
+        <span class="nav-text">Rekap Notulensi</span>
+    </a>
+
+    {{-- Menu khusus admin --}}
+    @if(Auth::user()->role === 'admin')
+        <a href="/groups"
+           class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
+           {{ Request::is('groups*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 
                          2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 
@@ -44,12 +58,7 @@
             </svg>
             <span class="nav-text">User Management</span>
         </a>
-        {{-- <a href="/groups" class="flex items-center space-x-3 p-2 rounded-lg text-slate-600 hover:bg-[#E5F2F1]">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 7a4 4 0 100-8 4 4 0 000 8zM12 
-                         9c-4.42 0-8 1.79-8 4v3h16v-3c0-2.21-3.58-4-8-4z"/>
-            </svg>
-            <span class="nav-text">Kelompok</span>
-        </a>
-    @endif --}}
+    @endif
+</nav>
+
     </aside>

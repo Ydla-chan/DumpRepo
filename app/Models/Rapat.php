@@ -28,4 +28,8 @@ class Rapat extends Model
     'tanggal' => 'date',
     'jam' => 'string', // ✅ biar aman
 ];
+public function notulen()
+{
+    return $this->hasOne(Notulen::class);
+}
 }

@@ -133,17 +133,18 @@
 
     // Edit Modal
     function openEditModal(id, name, userIds) {
-        document.getElementById('edit-group-name').value = name;
-        document.getElementById('edit-form').action = '/groups/' + id;
+    document.getElementById('edit-group-name').value = name;
+    document.getElementById('edit-form').action = '/groups/' + id;
 
-        // Reset all checkboxes
-        const container = document.getElementById('edit-users-container');
-        Array.from(container.querySelectorAll('input[type="checkbox"]')).forEach(checkbox => {
-            checkbox.checked = userIds.includes(parseInt(checkbox.value));
-        });
+    const container = document.getElementById('edit-users-container');
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
 
-        document.getElementById('edit-modal').classList.remove('hidden');
-    }
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = userIds.includes(parseInt(checkbox.value));
+    });
+
+    document.getElementById('edit-modal').classList.remove('hidden');
+}
     function closeEditModal() {
         document.getElementById('edit-modal').classList.add('hidden');
     }

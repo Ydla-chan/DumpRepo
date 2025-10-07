@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\RapatController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\RapatController;
+use App\Http\Controllers\NotulenController;
+use App\Http\Controllers\DashboardController;
 
 
 // Route Global 
@@ -44,9 +45,9 @@ Route::get('/loginwithgoogle', [AuthController::class, 'redirectToGoogle'])->nam
 Route::get('/loginwithgoogle/callback', [AuthController::class, 'handleGoogleCallback'])->name('login.google.callback');
 
 
-// Route Role User
-Route::view('/dashboard', 'dashboard')->name('dashboard')->middleware('auth');
-route::view('/profile', 'profile')->name('profile')->middleware('auth');
+// // Route Role User
+// Route::view('/dashboard', 'dashboard')->name('dashboard')->middleware('auth');
+// route::view('/profile', 'profile')->name('profile')->middleware('auth');
 
 
 // Route Global Logout
@@ -56,12 +57,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 route::view('/daftar', 'auth.daftar')->name('daftar');
 route::view('/masuk', 'masuk')->name('masuk');
 
-route::get('/home',  [DashboardController::class, 'index'])->name('home');
+route::get('/dashboard',  [DashboardController::class, 'index'])->name('dashboard');
 
 
 Route::post('/rapat', [RapatController::class, 'store'])->name('rapat.store');
 Route::get('/rapatrekap', [RapatController::class, 'index'])->name('rapat.index');
-Route::get('/rapat/{rapat}/details', [\App\Http\Controllers\RapatController::class, 'showDetails'])->name('rapat.details');
+Route::get('/rapat/{id}/details', [RapatController::class, 'showDetails']);
+
 
 // Route::get('/test-email', function () {
 //     try {
@@ -97,18 +99,41 @@ Route::get('/user', function () {
 
 
 
-route::get('/kelompok', function () {
-    return view('admin.groupmanagement');
-})->middleware(['auth','role:admin'])->name('kelompok');
+// route::get('/kelompok', function () {
+//     return view('admin.groupmanagement');
+// })->middleware(['auth','role:admin'])->name('kelompok');
 
 
 
 
-Route::resource('groups', GroupController::class);
+Route::resource('groups', GroupController::class) ->middleware(['auth','role:admin'])->name('kelompok', 'kelompok');
 
+Route::get('/groups/{id}/edit', [App\Http\Controllers\GroupController::class, 'editAjax'])->name('groups.edit.ajax');
 
 
 route::view('/viewlive', 'global.dashboard')->name('viewlive');
 
 
-route::view('/viewlives', 'global.notuleensimanagement')->name('viewlives');
+route::view('/rekapnotulensi', 'global.notuleensimanagement')->name('rekapnotulensi');
+
+// routee::resource('notuleen', NotuleenController::class)->middleware(['auth','role:admin'])->name('notuleen', 'notuleen');
+
+route::view('/viewnotuleen', 'global.viewnotulen')->name('notulenselection');
+
+// routes/web.php
+
+
+
+Route::prefix('notulen')->group(function () {
+    Route::get('/select', [NotulenController::class, 'selectRapat'])->name('notulen.select');
+    Route::get('/create', [NotulenController::class, 'create'])->name('notulen.create');
+    Route::post('/store', [NotulenController::class, 'store'])->name('notulen.store');
+Route::get('/{notulen}', [NotulenController::class, 'show'])->name('notulen.show');
+
+    // Store child data
+    Route::post('/{notulenId}/pokok', [NotulenController::class, 'storePokokBahasan'])->name('notulen.storePokok');
+    Route::post('/pokok/{pokokId}/keputusan', [NotulenController::class, 'storeKeputusan'])->name('notulen.storeKeputusan');
+    Route::post('/keputusan/{keputusanId}/tindakan', [NotulenController::class, 'storeTindakan'])->name('notulen.storeTindakan');
+});
+
+

@@ -80,10 +80,10 @@ class RapatController extends Controller
             return response()->json(['message' => 'Terjadi kesalahan pada server.'], 500);
         }
     }
-     public function showDetails(Rapat $rapat)
-    {
-        // Cukup kembalikan model Rapat, Laravel akan otomatis mengubahnya menjadi JSON
-        return response()->json($rapat);
-    }
+public function showDetails($id)
+{
+    $rapat = Rapat::find($id);
+    return view('rapatviewswe', compact('rapat'));
+}
 }
 

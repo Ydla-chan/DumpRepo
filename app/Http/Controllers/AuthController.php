@@ -131,15 +131,6 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-       // 🔹 Redirect sesuai role
-    if ($user->role === 'admin') {
-        return redirect()->route('admin.dashboard')
-            ->with('success', 'Login berhasil sebagai Admin!');
-    } elseif ($user->role === 'user') {
-        return redirect()->route('user.dashboard')
-            ->with('success', 'Login berhasil sebagai User!');
-    }
-
     // fallback kalau role belum di-set
     return redirect()->route('dashboard')
         ->with('success', 'Login berhasil!');

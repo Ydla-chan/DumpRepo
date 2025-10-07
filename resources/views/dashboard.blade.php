@@ -1,4 +1,4 @@
-<!-- resources/views/dashboard.blade.php -->
+s<!-- resources/views/dashboard.blade.php -->
 <!DOCTYPE html>
 <html lang="id">
 <head>

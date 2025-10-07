@@ -6,13 +6,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
-              <h3 class="text-m font-semibold text-slate-700">
-    @if (trim($__env->yieldContent('title')) == 'Dashboard')
-        Dashboard
-    @else
-        Dashboard > @yield('title')
-    @endif
-</h3>
             </div>
             <div class="flex items-center space-x-6">
                 <button class="relative text-slate-500 hover:text-slate-700">
@@ -24,7 +17,7 @@
                 <div class="relative">
                     <button id="profileBtn" class="flex items-center space-x-2">
                         <img src="https://i.pravatar.cc/32?u=user-xyz" alt="Profile" class="w-9 h-9 rounded-full ring-2 ring-offset-2 ring-[#A3D1CD]">
-                        <span class="font-medium hidden sm:inline text-slate-700">Aldy Jhonatan Hutasoit</span>
+                        <span class="font-medium hidden sm:inline text-slate-700">   {{ Auth::user()->name }}</span>
                     </button>
                     <div id="profileMenu" class="hidden absolute right-0 mt-3 w-48 bg-white shadow-xl rounded-lg overflow-hidden z-50 ring-1 ring-black ring-opacity-5">
                         <a href="#" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">Ubah Data Diri</a>
