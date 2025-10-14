@@ -13,6 +13,7 @@ class Rapat extends Model
     protected $table = 'rapats';
 
     protected $fillable = [
+        'judul',
         'agenda',
         'tanggal',
         'jam',

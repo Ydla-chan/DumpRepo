@@ -141,10 +141,13 @@ class AuthController extends Controller
         Mail::to($email)->send(new SendOtpMail($otp));
     }
 
-    public function logout()
+  public function logout(Request $request)
     {
         Auth::logout();
-        return redirect()->route('login.form')
-            ->with('success', 'Anda sudah logout.');
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+           return redirect('/')->with('success', 'Anda berhasil logout.');
     }
 }

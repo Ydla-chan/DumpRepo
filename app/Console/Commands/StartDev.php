@@ -8,7 +8,7 @@ use Symfony\Component\Process\Process;
 class StartDev extends Command
 {
     protected $signature = 'start';
-    protected $description = 'Menjalankan Laravel server + Vite (npm run dev) secara bersamaan';
+    protected $description = 'Menjalankan Laravel server + Vite (npm run dev) secara bersamaan di jaringan lokal';
 
     protected $laravelProcess;
     protected $viteProcess;
@@ -17,17 +17,17 @@ class StartDev extends Command
     {
         $this->info('🚀 Menjalankan Laravel server & Vite (npm run dev)...');
 
-        // Jalankan Laravel server
-        $this->laravelProcess = new Process(['php', 'artisan', 'serve']);
+        // Jalankan Laravel server di semua IP (agar bisa diakses lewat jaringan lokal)
+        $this->laravelProcess = new Process(['php', 'artisan', 'serve', '--host=0.0.0.0', '--port=8000']);
         $this->laravelProcess->setTty(Process::isTtySupported());
         $this->laravelProcess->start();
 
-        // Jalankan npm run dev
-        $this->viteProcess = new Process(['npm', 'run', 'dev']);
+        // Jalankan Vite dengan host 0.0.0.0
+        $this->viteProcess = new Process(['npm', 'run', 'dev', '--', '--host']);
         $this->viteProcess->setTty(Process::isTtySupported());
         $this->viteProcess->start();
 
-        // Loop untuk baca output secara realtime
+        // Loop baca output secara realtime
         while ($this->laravelProcess->isRunning() || $this->viteProcess->isRunning()) {
             $this->readProcessOutput($this->laravelProcess, 'Laravel');
             $this->readProcessOutput($this->viteProcess, 'Vite');

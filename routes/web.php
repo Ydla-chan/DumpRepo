@@ -65,23 +65,23 @@ Route::get('/rapatrekap', [RapatController::class, 'index'])->name('rapat.index'
 Route::get('/rapat/{id}/details', [RapatController::class, 'showDetails']);
 
 
-// Route::get('/test-email', function () {
-//     try {
-//         // Ganti dengan alamat email Anda yang valid untuk menerima tes
-//         $testEmail = 'aldyjhonatanhutasoit.1@gmail.com'; 
+Route::get('/test-email', function () {
+    try {
+        // Ganti dengan alamat email Anda yang valid untuk menerima tes
+        $testEmail = 'aldyjhonatanhutasoit.1@gmail.com'; 
 
-//         Mail::raw('Ini adalah email tes dari aplikasi MeetLog.', function ($message) use ($testEmail) {
-//             $message->to($testEmail)
-//                     ->subject('Tes Koneksi Email MeetLog');
-//         });
+        Mail::raw('Ini adalah email tes dari aplikasi MeetLog.', function ($message) use ($testEmail) {
+            $message->to($testEmail)
+                    ->subject('Tes Koneksi Email MeetLog');
+        });
 
-//         return 'Berhasil mengirim email tes! Silakan periksa inbox Anda.';
+        return 'Berhasil mengirim email tes! Silakan periksa inbox Anda.';
 
-//     } catch (\Exception $e) {
-//         // Akan menampilkan pesan error yang detail jika APP_DEBUG=true
-//         return 'Gagal mengirim email.e Error: <pre>' . $e->getMessage() . '</pre>';
-//     }
-// });
+    } catch (\Exception $e) {
+        // Akan menampilkan pesan error yang detail jika APP_DEBUG=true
+        return 'Gagal mengirim email.e Error: <pre>' . $e->getMessage() . '</pre>';
+    }
+});
 
 route::view('/testview', 'global.dashboard')->middleware('auth')->name('testview');
 
@@ -128,12 +128,18 @@ Route::prefix('notulen')->group(function () {
     Route::get('/select', [NotulenController::class, 'selectRapat'])->name('notulen.select');
     Route::get('/create', [NotulenController::class, 'create'])->name('notulen.create');
     Route::post('/store', [NotulenController::class, 'store'])->name('notulen.store');
-Route::get('/{notulen}', [NotulenController::class, 'show'])->name('notulen.show');
 
     // Store child data
     Route::post('/{notulenId}/pokok', [NotulenController::class, 'storePokokBahasan'])->name('notulen.storePokok');
     Route::post('/pokok/{pokokId}/keputusan', [NotulenController::class, 'storeKeputusan'])->name('notulen.storeKeputusan');
     Route::post('/keputusan/{keputusanId}/tindakan', [NotulenController::class, 'storeTindakan'])->name('notulen.storeTindakan');
+
+    // PENTING: ini harus paling bawah!
+    Route::get('/{notulen}', [NotulenController::class, 'show'])->name('notulen.show');
 });
 
 
+// web.php
+Route::delete('/pokok-bahasan/{id}', [PokokBahasanController::class, 'destroy'])->name('pokokBahasan.destroy');
+Route::delete('/keputusan/{id}', [KeputusanController::class, 'destroy'])->name('keputusan.destroy');
+Route::delete('/tindakan/{id}', [TindakanController::class, 'destroy'])->name('tindakan.destroy');

@@ -1,5 +1,5 @@
     <aside id="sidebar" class="bg-white shadow-lg flex flex-col fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 z-50 transition-all duration-300 ease-in-out w-64">
-        <div class="p-4 border-b flex items-center justify-between h-16 shrink-0">
+        <div class="p-4 border border-slate-100 flex items-center justify-between h-16 shrink-0">
             <h1 id="sidebar-logo" class="text-2xl font-bold text-[#4C8C86] transition-all">MeetLog</h1>
             <button id="minimizeSidebarBtn" class="hidden md:block text-slate-500 hover:text-slate-800">
                 <svg id="minimize-btn-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -34,7 +34,7 @@
     </a>
 
     <!-- Rekap Notulensi -->
-    <a href="/viewnotuleen"
+    <a href="/notulen/select"
        class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
        {{ Request::is('viewnotuleen*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">

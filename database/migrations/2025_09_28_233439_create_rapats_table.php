@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('rapats', function (Blueprint $table) {
     $table->id();
+    $table->string('judul');
     $table->string('agenda');
     $table->date('tanggal');
     $table->time('jam');

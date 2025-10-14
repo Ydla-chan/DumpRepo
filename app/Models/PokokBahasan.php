@@ -9,7 +9,11 @@ class PokokBahasan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['notulen_id', 'judul'];
+    protected $fillable = [
+        'notulen_id',
+        'judul',
+        'deskripsi',
+    ];
 
     public function notulen()
     {

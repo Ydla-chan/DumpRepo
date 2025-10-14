@@ -27,6 +27,7 @@ class RapatController extends Controller
     {
         // 1. Validasi input dari form, termasuk undangan
         $validator = Validator::make($request->all(), [
+            'judul'       => 'required|string|max:255',
             'agenda'      => 'required|string|max:255',
             'tanggal'     => 'required|date',
             'jam'         => 'required|date_format:H:i',
@@ -45,6 +46,7 @@ class RapatController extends Controller
         try {
             // Siapkan data dasar
             $dataToSave = [
+                'judul'        => $request->judul,
                 'agenda'      => $request->agenda,
                 'tanggal'     => $request->tanggal,
                 'jam'         => $request->jam,
@@ -82,8 +84,17 @@ class RapatController extends Controller
     }
 public function showDetails($id)
 {
-    $rapat = Rapat::find($id);
-    return view('rapatviewswe', compact('rapat'));
+    $rapat = Rapat::findOrFail($id);
+
+    return response()->json([
+        'judul' => $rapat->judul,
+        'agenda' => $rapat->agenda,
+        'tanggal' => $rapat->tanggal->format('l, d F Y'),
+        'jam' => $rapat->jam,
+        'tipe_lokasi' => $rapat->tipe_lokasi,
+        'ruangan' => $rapat->ruangan,
+        'link' => $rapat->link,
+    ]);
 }
 }
 

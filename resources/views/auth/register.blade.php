@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+   @vite(['resources/css/app.css', 'resources/js/app.js'])
      <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -35,7 +35,7 @@
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+    <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg mx-4 sm:mx-0"    >
         <h2 class="text-2xl font-bold text-center mb-6">Register</h2>
 
         {{-- Pesan Error --}}
@@ -53,15 +53,15 @@
             @csrf
             <div>
                 <label class="block text-sm font-medium">Nama</label>
-                <input type="text" name="name" required class="w-full p-2 border rounded-lg" placeholder="Masukkan Nama Lengkap">
+                <input type="text" name="name" required class="w-full p-2 border border-gray-300 rounded-lg appearance-none focus:outline-none" placeholder="Masukkan Nama Lengkap">
             </div>
             <div>
                 <label class="block text-sm font-medium">Email</label>
-                <input type="email" name="email" required class="w-full p-2 border rounded-lg" placeholder="Masukkan Alamat Email">
+                <input type="email" name="email" required class="w-full p-2 border border-gray-300 rounded-lg appearance-none focus:outline-none" placeholder="Masukkan Alamat Email">
             </div>
             <div>
                 <label class="block text-sm font-medium">Password</label>
-                <input type="password" name="password" required class="w-full p-2 border rounded-lg" placeholder="Masukkan Password">
+                <input type="password" name="password" required class="w-full p-2 border border-gray-300 rounded-lg appearance-none focus:outline-none" placeholder="Masukkan Password">
             </div>
             <button type="submit"
                 class="w-full flex items-center justify-center gap-2 px-4 py-2   bg-custom-teal text-white rounded-lg md:rounded-lg shadow-md hover:bg-custom-teal-dark transition-all duration-300">

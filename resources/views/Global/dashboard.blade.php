@@ -71,11 +71,11 @@
     </div>
 
 
-<div id="newMeetModal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+<div id="newMeetModal" class="hidden fixed inset-0 bg-gray-800/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300">
         <div class="modal-panel bg-white rounded-xl shadow-2xl w-full max-w-lg transition-all duration-300 ease-in-out transform">
             <form id="newMeetForm" action="{{ route('rapat.store') }}" method="POST">
                 @csrf
-                <div class="flex items-center justify-between p-5 border-b">
+                <div class="flex items-center justify-between p-5 border border-slate-100 shadow-m bg-white">
                     <h3 class="text-xl font-semibold text-slate-800">Buat Rapat Baru</h3>
                     <button type="button" id="closeModalBtn" class="text-slate-400 hover:text-slate-700">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -87,7 +87,8 @@
                 <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
                       <div>
                         <label for="agenda" class="block text-sm font-medium text-slate-700">Judul Rapat</label>
-                        <input type="textbox" id="agenda" name="agenda" class="mt-1 block w-full border-slate-300 rounded-md shadow-sm focus:outline-none " placeholder="Masukkan Judul Rapat" re>
+                        <input type="textbox" id="judul" name="judul" class="mt-1 block w-full border-slate-300 rounded-md shadow-sm focus:outline-none " placeholder="Masukkan Judul Rapat" required>
+                        
                     </div>
                     <div>
                         <label for="agenda" class="block text-sm font-medium text-slate-700">Point Pembahasan</label>
@@ -155,7 +156,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-end p-5 border-t space-x-3">
+                <div class="flex items-center justify-end p-5 border border-slate-100 shadow-m bg-white space-x-3">
                     <button type="button" id="cancelModalBtn" class="bg-white py-2 px-4 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 hover:bg-slate-50">Batal</button>
                     <button type="submit" class="bg-[#4C8C86] hover:bg-[#3D706B] py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white">
                         Simpan Jadwal
