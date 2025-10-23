@@ -20,7 +20,7 @@
                 <div class="group bg-white rounded-2xl shadow-md transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-2 border-b-4 border-transparent hover:border-custom-teal">
                     {{-- Header Kartu dengan Status --}}
                     <div class="p-5 border-b border-slate-100 flex justify-between items-center">
-                        <h3 class="text-lg font-bold text-slate-800 truncate pr-4">{{ $rapat->agenda }}</h3>
+                        <h3 class="text-lg font-bold text-slate-800 truncate pr-4">{{ $rapat->judul }}</h3>
                         @if ($rapat->notulen)
                             <span class="text-xs font-medium bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full">Sudah Dibuat</span>
                         @else
@@ -102,7 +102,7 @@
                     <tbody class="divide-y divide-slate-200">
                         @foreach ($notulens as $notulen)
                             <tr class="hover:bg-custom-teal-light/50 transition-colors duration-200">
-                                <td class="px-6 py-4 font-semibold text-slate-800">{{ $notulen->rapat->agenda }}</td>
+                                <td class="px-6 py-4 font-semibold text-slate-800">{{ $notulen->rapat->judul }}</td>
                                 <td class="px-6 py-4 text-slate-600">{{ \Carbon\Carbon::parse($notulen->rapat->tanggal)->translatedFormat('d F Y') }}</td>
                                 <td class="px-6 py-4 text-slate-600">
                                     @if ($notulen->rapat->tipe_lokasi == 'offline')

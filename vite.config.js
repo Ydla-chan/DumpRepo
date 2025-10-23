@@ -8,6 +8,6 @@ export default defineConfig({
       input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/support.js','resources/js/layout.js','resources/js/notulen.js'],
       refresh: true,
     }),
-    tailwindcss(), // langsung dipanggil di Vite
+    tailwindcss(), 
   ],
 })

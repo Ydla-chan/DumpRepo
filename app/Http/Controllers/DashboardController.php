@@ -17,7 +17,7 @@ class DashboardController extends Controller
     {
         $groups = Group::with('users:id,name,email,group_id')->get();
         // 1. Ambil data rapat dari database dengan kolom yang lebih lengkap
-        $rapats = Rapat::select('id', 'agenda', 'tanggal', 'jam','tipe_lokasi', 'undangan')->get();
+        $rapats = Rapat::select('id', 'judul', 'tanggal', 'jam','tipe_lokasi', 'undangan')->get();
 
         // 2. Format data agar sesuai dengan yang dibutuhkan FullCalendar
         $events = $rapats->map(function ($rapat) {
@@ -26,7 +26,7 @@ class DashboardController extends Controller
 
             return [
                 'id'        => $rapat->id,
-                'title'     => $rapat->agenda,
+                'title'     => $rapat->judul,
                 'start'     => $startDateTime->toIso8601String(),
                 'location'  => $rapat->tipe_lokasi === 'online' ? $rapat->link : $rapat->ruangan,
 

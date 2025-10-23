@@ -18,12 +18,12 @@ class StartDev extends Command
         $this->info('🚀 Menjalankan Laravel server & Vite (npm run dev)...');
 
         // Jalankan Laravel server di semua IP (agar bisa diakses lewat jaringan lokal)
-        $this->laravelProcess = new Process(['php', 'artisan', 'serve', '--host=0.0.0.0', '--port=8000']);
+        $this->laravelProcess = new Process(['php', 'artisan', 'serve']);
         $this->laravelProcess->setTty(Process::isTtySupported());
         $this->laravelProcess->start();
 
         // Jalankan Vite dengan host 0.0.0.0
-        $this->viteProcess = new Process(['npm', 'run', 'dev', '--', '--host']);
+        $this->viteProcess = new Process(['npm', 'run', 'dev']);
         $this->viteProcess->setTty(Process::isTtySupported());
         $this->viteProcess->start();
 

@@ -10,8 +10,8 @@ use App\Http\Controllers\DashboardController;
 
 // Route Global 
 Route::get('/', fn() => view('landing'))->name('landing');
-Route::get('/AboutUs', fn() => view('landing'))->name('landing');
-Route::get('/TermService', fn() => view('landing'))->name('landing');
+// Route::get('/AboutUs', fn() => view('landing'))->name('landing');
+// Route::get('/TermService', fn() => view('landing'))->name('landing');
 
 // Route Auth Register
 Route::view('/register', 'auth.register')->name('register.form');
@@ -83,7 +83,7 @@ Route::get('/test-email', function () {
     }
 });
 
-route::view('/testview', 'global.dashboard')->middleware('auth')->name('testview');
+route::view('/testview', 'global.profilecustom')->name('testview');
 
 
 
@@ -139,7 +139,7 @@ Route::prefix('notulen')->group(function () {
 });
 
 
-// web.php
-Route::delete('/pokok-bahasan/{id}', [PokokBahasanController::class, 'destroy'])->name('pokokBahasan.destroy');
-Route::delete('/keputusan/{id}', [KeputusanController::class, 'destroy'])->name('keputusan.destroy');
-Route::delete('/tindakan/{id}', [TindakanController::class, 'destroy'])->name('tindakan.destroy');
+// // web.php
+// Route::delete('/pokok-bahasan/{id}', [PokokBahasanController::class, 'destroy'])->name('pokokBahasan.destroy');
+// Route::delete('/keputusan/{id}', [KeputusanController::class, 'destroy'])->name('keputusan.destroy');
+// Route::delete('/tindakan/{id}', [TindakanController::class, 'destroy'])->name('tindakan.destroy');
