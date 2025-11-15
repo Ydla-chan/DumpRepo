@@ -10,18 +10,18 @@ class PokokBahasan extends Model
     use HasFactory;
 
     protected $fillable = [
-        'notulen_id',
-        'judul',
-        'deskripsi',
+        'minute_id',
+        'title',
+        'description',
     ];
 
-    public function notulen()
+    public function minute()
     {
         return $this->belongsTo(Notulen::class);
     }
 
-    public function keputusans()
+    public function decisions()
     {
-        return $this->hasMany(Keputusan::class);
+        return $this->hasMany(Decision::class);
     }
 }

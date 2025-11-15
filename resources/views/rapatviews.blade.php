@@ -14,8 +14,8 @@
         @forelse ($rapats as $rapat)
             <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-5 flex flex-col">
                 <div class="flex justify-between items-start mb-4">
-                    <h4 class="text-lg font-bold text-slate-800 pr-4">{{ $rapat->judul }}</h4>
-                    @if ($rapat->tanggal->isFuture())
+                    <h4 class="text-lg font-bold text-slate-800 pr-4">{{ $rapat->title }}</h4>
+                    @if ($rapat->date->isFuture())
                         <span class="shrink-0 px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">Terjadwal</span>
                     @else
                         <span class="shrink-0 px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Selesai</span>
@@ -25,19 +25,19 @@
                 <div class="space-y-3 text-sm text-slate-600 mb-4 flex-grow">
                     <div class="flex items-center gap-3">
                         <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <span>{{ $rapat->tanggal->format('l, d F Y') }}</span>
+                        <span>{{ $rapat->date?->format('l, d F Y') }}</span>
                     </div>
                     <div class="flex items-center gap-3">
                         <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <span>Pukul {{ \Carbon\Carbon::parse($rapat->jam)->format('H:i') }} WIB</span>
+                    <span>Pukul {{ \Carbon\Carbon::parse($rapat->time)->format('H:i') }} WIB</span>  
                     </div>
                     <div class="flex items-center gap-3">
-                        @if ($rapat->tipe_lokasi == 'online')
+                        @if ($rapat->location_type == 'online')
                             <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                            <a href="{{ $rapat->link }}" target="_blank" class="text-blue-600 hover:underline truncate">Online Meeting Link</a>
+                            <a href="{{ $rapat->meeting_link }}" target="_blank" class="text-blue-600 hover:underline truncate">Online Meeting Link</a>
                         @else
                             <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            <span class="truncate">{{ $rapat->ruangan ?? 'N/A' }}</span>
+                            <span class="truncate">{{ $rapat->room_name ?? 'N/A' }}</span>
                         @endif
                     </div>
                 </div>
@@ -189,9 +189,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function populateModal(data) {
-        document.getElementById('detailAgenda').textContent = data.judul;
+        document.getElementById('detailAgenda').textContent = data.title;
 
-        const rapatDate = new Date(`${data.tanggal} ${data.jam}`);
+        const rapatDate = new Date(`${data.date} ${data.time}`);
         const now = new Date();
         const rapatEnd = new Date(rapatDate.getTime() + 60 * 60 * 1000);
 
@@ -217,12 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
             </span>
         `;
 
-        document.getElementById('detailTanggalWaktu').textContent = `${data.tanggal}, ${data.jam} WIB`;
+        document.getElementById('detailTanggalWaktu').textContent = `${data.date}, ${data.time} WIB`;
 
         const lokasi = document.getElementById('detailLokasi');
-        lokasi.innerHTML = data.tipe_lokasi === 'online'
-            ? `<a href="${data.link}" target="_blank" class="text-[#4C8C86] hover:underline font-medium">Online Meeting Link</a>`
-            : (data.ruangan ?? 'Belum ditentukan');
+        lokasi.innerHTML = data.location_type === 'online'
+            ? `<a href="${data.meeting_link}" target="_blank" class="text-[#4C8C86] hover:underline font-medium">Online Meeting Link</a>`
+            : (data.room_name ?? 'Belum ditentukan');
 
         document.getElementById('detailCatatan').textContent = data.catatan ?? 'Tidak ada catatan tambahan.';
     }

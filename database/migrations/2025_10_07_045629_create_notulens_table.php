@@ -6,17 +6,31 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('notulens', function (Blueprint $table) {
+        Schema::create('minutes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rapat_id')->constrained('rapats')->onDelete('cascade');
-            $table->string('judul');
-            $table->date('tanggal');
-            $table->foreignId('pembuat_id')->nullable()->constrained('users')->nullOnDelete();
+
+            // rapat_id → meeting_id
+            $table->foreignId('meeting_id')
+                  ->constrained('meetings')
+                  ->onDelete('cascade');
+
+            // judul → title
+            $table->string('title');
+
+            // tanggal → date
+            $table->date('date');
+
+            // pembuat_id → creator_id
+            $table->foreignId('creator_id')
+                  ->nullable()
+                  ->constrained('users')
+                  ->nullOnDelete();
+
             $table->timestamps();
         });
     }
 
     public function down(): void {
-        Schema::dropIfExists('notulens');
+        Schema::dropIfExists('minutes');
     }
 };

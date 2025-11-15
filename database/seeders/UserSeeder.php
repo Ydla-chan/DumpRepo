@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Admin Aldy',
                 'password' => Hash::make('aldyjhonatanhutasoit.1@gmail.com'), // ganti sesuai kebutuhan
-                'role' => 'admin',
+                'role' => 'user',
             ]
         );
 
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'User Aldy',
                 'password' => Hash::make('password123'), // ganti sesuai kebutuhan
-                'role' => 'user',
+                'role' => 'company_admin',
             ]
         );
     }

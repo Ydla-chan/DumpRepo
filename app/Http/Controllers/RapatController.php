@@ -16,7 +16,7 @@ class RapatController extends Controller
         // 1. Ambil data dari model Rapat
         // 2. Urutkan berdasarkan tanggal (terbaru dulu)
         // 3. Gunakan paginate untuk membatasi data per halaman (misal: 10)
-        $rapats = Rapat::orderBy('tanggal', 'desc')->paginate(10);
+        $rapats = Rapat::orderBy('date', 'desc')->paginate(10);
 
         // 4. Kirim data 'rapats' ke view 'rekap-rapat'
         return view('rapatviews', ['rapats' => $rapats]);
@@ -45,20 +45,20 @@ class RapatController extends Controller
         // 2. Jika validasi berhasil, siapkan data untuk disimpan
         try {
             // Siapkan data dasar
-            $dataToSave = [
-                'judul'        => $request->judul,
-                'agenda'      => $request->agenda,
-                'tanggal'     => $request->tanggal,
-                'jam'         => $request->jam,
-                'tipe_lokasi' => $request->tipe_lokasi,
-                'undangan'    => $request->undangan ?? [], // Simpan array undangan
+          $dataToSave = [
+                'title'          => $request->judul,
+                'agenda'         => $request->agenda,
+                'date'           => $request->tanggal,
+                'time'           => $request->jam,
+                'location_type'  => $request->tipe_lokasi,
+                'invitation'     => $request->undangan ?? [],
             ];
 
             // Logika Kondisi Lokasi Rapat 
             if ($request->tipe_lokasi === 'online') {
-                $dataToSave['link'] = $request->lokasi;
+                $dataToSave['meeting_link'] = $request->lokasi;
             } else {
-                $dataToSave['ruangan'] = $request->lokasi;
+                $dataToSave['room_name'] = $request->lokasi;
             }
 
             // Buat record baru dan simpan objeknya ke variabel $rapat
@@ -87,13 +87,13 @@ public function showDetails($id)
     $rapat = Rapat::findOrFail($id);
 
     return response()->json([
-        'judul' => $rapat->judul,
-        'agenda' => $rapat->agenda,
-        'tanggal' => $rapat->tanggal->format('l, d F Y'),
-        'jam' => $rapat->jam,
-        'tipe_lokasi' => $rapat->tipe_lokasi,
-        'ruangan' => $rapat->ruangan,
-        'link' => $rapat->link,
+        'title'         => $rapat->title,
+        'agenda'        => $rapat->agenda,
+        'date'       => \Carbon\Carbon::parse($rapat->date)->translatedFormat('l, d F Y'),
+        'jam'           => $rapat->time,
+        'location_type' => $rapat->location_type,
+        'room_name'     => $rapat->room_name,
+        'meeting_link'  => $rapat->meeting_link,
     ]);
 }
 }

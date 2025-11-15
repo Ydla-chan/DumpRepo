@@ -17,18 +17,18 @@ class DashboardController extends Controller
     {
         $groups = Group::with('users:id,name,email,group_id')->get();
         // 1. Ambil data rapat dari database dengan kolom yang lebih lengkap
-        $rapats = Rapat::select('id', 'judul', 'tanggal', 'jam','tipe_lokasi', 'undangan')->get();
+        $rapat = Rapat::select('id', 'title', 'date', 'time','location_type', 'invitation')->get();
 
         // 2. Format data agar sesuai dengan yang dibutuhkan FullCalendar
-        $events = $rapats->map(function ($rapat) {
+        $events = $rapat->map(function ($rapat) {
             // Gabungkan tanggal dan jam, lalu format ke standar ISO8601
-            $startDateTime = Carbon::parse($rapat->tanggal->format('Y-m-d') . ' ' . $rapat->jam);
+            $startDateTime = Carbon::parse($rapat->date->format('Y-m-d') . ' ' . $rapat->time);
 
             return [
                 'id'        => $rapat->id,
-                'title'     => $rapat->judul,
+                'title'     => $rapat->title,
                 'start'     => $startDateTime->toIso8601String(),
-                'location'  => $rapat->tipe_lokasi === 'online' ? $rapat->link : $rapat->ruangan,
+                'location'  => $rapat->location_type === 'online' ? $rapat->meeting_link : $rapat->room,
 
             ];
         });

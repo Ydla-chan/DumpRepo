@@ -9,11 +9,11 @@ class Tindakan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['keputusan_id', 'pic_id', 'deskripsi', 'deadline', 'status'];
+    protected $fillable = ['decision_id', 'assigned_user_id', 'description', 'deadline', 'status'];
 
-    public function keputusan()
+    public function decision()
     {
-        return $this->belongsTo(Keputusan::class);
+        return $this->belongsTo(Decision::class);
     }
 
     public function pic()

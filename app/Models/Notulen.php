@@ -10,26 +10,26 @@ class Notulen extends Model
     use HasFactory;
 
     protected $fillable = [
-        'rapat_id',
-        'judul',
-        'tanggal',
-        'pembuat_id',
+        'meeting_id',
+        'title',
+        'date',
+        'creator_id',
     ];
 
     // 🟢 Tambahkan relasi ini
-    public function pokokBahasans()
+    public function discussionPoints()
     {
-        return $this->hasMany(PokokBahasan::class);
+        return $this->hasMany(DiscussionPoint::class);
     }
 
     // (opsional) relasi tambahan
-    public function rapat()
+    public function meeting()
     {
-        return $this->belongsTo(Rapat::class);
+        return $this->belongsTo(Meeting::class);
     }
 
-    public function pembuat()
+    public function creator()
     {
-        return $this->belongsTo(User::class, 'pembuat_id');
+        return $this->belongsTo(User::class, 'creator_id');
     }
 }

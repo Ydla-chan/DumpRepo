@@ -10,26 +10,26 @@ class Rapat extends Model
 {
     use HasFactory;
 
-    protected $table = 'rapats';
+    protected $table = 'meetings';
 
     protected $fillable = [
-        'judul',
+        'title',
         'agenda',
-        'tanggal',
-        'jam',
-        'undangan',
-        'tipe_lokasi',
-        'link',
-        'ruangan',
+        'date',
+        'time',
+        'invitation',
+        'location_type',
+        'meeting_link',
+        'room',
     ];
 
 
   protected $casts = [
-    'undangan' => 'array',
-    'tanggal' => 'date',
-    'jam' => 'string', // ✅ biar aman
+    'invitation' => 'array',
+    'date' => 'date',
+    'time' => 'string', // ✅ biar aman
 ];
-public function notulen()
+public function minute()
 {
     return $this->hasOne(Notulen::class);
 }

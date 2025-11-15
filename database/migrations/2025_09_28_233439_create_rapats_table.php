@@ -11,28 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rapats', function (Blueprint $table) {
-    $table->id();
-    $table->string('judul');
-    $table->string('agenda');
-    $table->date('tanggal');
-    $table->time('jam');
-    $table->json('undangan')->nullable();
-    $table->enum('tipe_lokasi', ['online', 'offline']);
-    $table->string('link')->nullable();
-    $table->string('ruangan')->nullable();
-    $table->timestamps();
-
+        Schema::create('meetings', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');                      // judul
+            $table->string('agenda');                     // agenda
+            $table->date('date');                         // tanggal
+            $table->time('time');                         // jam
+            $table->json('invitation')->nullable();    // undangan
+            $table->enum('location_type', ['online', 'offline']); // tipe lokasi
+            $table->string('meeting_link')->nullable();   // link
+            $table->string('room_name')->nullable();      // ruangan
+            $table->timestamps();
         });
-
     }
-    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('rapats');
+        Schema::dropIfExists('meetings');
     }
 };

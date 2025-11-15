@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeetLogg - Super Admin (Fresh)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Mengadopsi Custom Scrollbar Anda */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; /* slate-100 */ }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; /* slate-300 */ border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; /* slate-400 */ }
+        
+        /* Lebar sidebar */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 flex min-h-screen overflow-hidden">
+
+    <div class="flex h-screen w-full">
+
+        <div class="sidebar bg-white text-slate-700 flex flex-col p-4 shadow-lg hidden md:flex transition-all duration-300 border-r border-slate-100">
+            <div class="text-3xl font-bold mb-8 text-[#4C8C86] p-2">MeetLogg</div>
+            <nav class="flex-grow">
+                <h3 class="text-xs font-semibold uppercase text-slate-400 mb-2 px-3">Global</h3>
+                <a href="#" class="flex items-center py-3 px-4 rounded-lg bg-slate-100 text-[#4C8C86] mb-2 font-semibold transition duration-150">
+                    <span class="mr-3">🖥️</span> Beranda
+                </a>
+                <a href="#" class="flex items-center py-3 px-4 rounded-lg hover:bg-slate-100 mb-2 transition duration-150">
+                    <span class="mr-3">🏢</span> Tenant
+                </a>
+                <a href="#" class="flex items-center py-3 px-4 rounded-lg hover:bg-slate-100 mb-2 transition duration-150">
+                    <span class="mr-3">👥</span> Pengguna
+                </a>
+                
+                <h3 class="text-xs font-semibold uppercase text-slate-400 mt-6 mb-2 px-3">Sistem</h3>
+                <a href="#" class="flex items-center py-3 px-4 rounded-lg hover:bg-slate-100 mb-2 transition duration-150">
+                    <span class="mr-3">📊</span> Laporan
+                </a>
+                <a href="#" class="flex items-center py-3 px-4 rounded-lg hover:bg-slate-100 transition duration-150">
+                    <span class="mr-3">⚙️</span> Pengaturan
+                </a>
+            </nav>
+            <div class="mt-auto pt-4 border-t border-slate-200">
+                <div class="text-sm text-slate-500">Super Admin</div>
+                <div class="font-medium text-slate-800">John Doe</div>
+            </div>
+        </div>
+
+        <div class="flex-1 flex flex-col overflow-auto">
+            
+            <header class="flex items-center justify-between p-4 bg-white sticky top-0 z-10 border-b border-slate-200">
+                <div class="flex items-center">
+                    <button class="md:hidden text-slate-600 mr-4 text-2xl">☰</button>
+                    <h1 class="text-2xl font-semibold text-slate-800">Beranda Global</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <input type="text" placeholder="Cari tenant..." class="hidden sm:block p-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-[#4C8C86] focus:border-[#4C8C86] outline-none">
+                    
+                    <button class="text-slate-500 hover:text-slate-700 text-xl">🔔</button>
+                    <div class="w-10 h-10 bg-[#E5F2F1] rounded-full flex items-center justify-center text-[#4C8C86] font-bold cursor-pointer">SA</div>
+                </div>
+            </header>
+
+            <main class="flex-1 p-4 md:p-8">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    
+                    <div class="bg-white p-6 rounded-2xl shadow-sm flex items-center space-x-4">
+                        <div class="bg-[#E5F2F1] text-[#4C8C86] p-3 rounded-full">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H5m0 0v-4m0 4h5m0 0v-4m0 4h5m0 0v-4"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-sm">Total Tenant Aktif</p>
+                            <div class="text-3xl font-bold text-slate-900 mt-1">45</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm flex items-center space-x-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-sm">Total Pengguna (Global)</p>
+                            <div class="text-3xl font-bold text-slate-900 mt-1">12.560</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm flex items-center space-x-4">
+                        <div class="bg-green-100 text-green-600 p-3 rounded-full">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.105 0 2 .895 2 2s-.895 2-2 2-2 .895-2 2 .895 2 2 2m-2 4h4m-4 0v2m0-6V6m0 0h.01M6 20h12M6 4h12M6 12h12"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-sm">MRR (Rp)</p>
+                            <div class="text-3xl font-bold text-slate-900 mt-1">125 Jt</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm flex items-center space-x-4">
+                        <div class="bg-red-100 text-red-600 p-3 rounded-full">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 12.728L5.636 14.83m12.728 0l-3.536-3.536M9.172 14.83l-3.536 3.536M12 18c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-sm">Tiket Menunggu</p>
+                            <div class="text-3xl font-bold text-slate-900 mt-1">3</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm">
+                    
+                    <div class="flex justify-between items-center mb-6 flex-wrap gap-3">
+                        <h2 class="text-xl font-bold text-slate-700">Manajemen Tenant</h2>
+                        <button class="bg-[#4C8C86] text-white py-2 px-4 rounded-lg hover:bg-[#3D706B] transition duration-150 font-medium shadow-sm">
+                            + Tambah Tenant Baru
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Perusahaan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Paket</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Pengguna</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-slate-100">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">PT Solusi Sejahtera</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">Premium</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">150 / 200</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-[#4C8C86] hover:text-[#3D706B] mr-4">Lihat</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">CV Inovasi Digital</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">Basic</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">30 / 50</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-[#4C8C86] hover:text-[#3D706B] mr-4">Lihat</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">PT Maju Mundur (Trial)</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Trial</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">Trial</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">5 / 10</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-[#4C8C86] hover:text-[#3D706B] mr-4">Lihat</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">PT Berhenti Sejenak</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Nonaktif</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">Basic</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">0 / 50</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-[#4C8C86] hover:text-[#3D706B] mr-4">Lihat</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

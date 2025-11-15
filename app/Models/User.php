@@ -17,16 +17,16 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'otp_code',
-        'otp_expires_at',
-        'is_verified',
-        'group_id', // ✅ tambahin ini
-    ];
-
+   protected $fillable = [
+    'name',
+    'email',
+    'password',
+    'otp_code',
+    'otp_expires_at',
+    'is_verified',
+    'company_id',  // ganti ke ini
+    'role',        // role user (user / company_admin)
+];
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -83,7 +83,7 @@ Route::get('/test-email', function () {
     }
 });
 
-route::view('/testview', 'global.profilecustom')->name('testview');
+route::view('/testview', 'global.test')->name('testview');
 
 
 

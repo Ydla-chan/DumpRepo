@@ -9,15 +9,15 @@ class Keputusan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['pokok_bahasan_id', 'isi_keputusan'];
+    protected $fillable = ['discussion_point_id', 'decision_text'];
 
-    public function pokokBahasan()
+    public function discussionPoint()
     {
-        return $this->belongsTo(PokokBahasan::class);
+        return $this->belongsTo(DiscussionPoint::class);
     }
 
-    public function tindakans()
+    public function actions()
     {
-        return $this->hasMany(Tindakan::class);
+        return $this->hasMany(Action::class);
     }
 }
