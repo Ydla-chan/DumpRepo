@@ -180,3 +180,10 @@ Route::get('/rapat/{rapat}/absensi', [AttendanceController::class, 'showAbsensi'
 
 
 route::view('/logbook', 'global.profilecustom')->name('profilecustom');  
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'uploadPhoto'])->name('profile.upload-photo');
+});  
