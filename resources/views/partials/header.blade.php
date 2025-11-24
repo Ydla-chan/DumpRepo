@@ -16,11 +16,19 @@
                 </button>
                 <div class="relative">
                     <button id="profileBtn" class="flex items-center space-x-2">
-                        <img src="https://i.pravatar.cc/32?u=user-xyz" alt="Profile" class="w-9 h-9 rounded-full ring-2 ring-offset-2 ring-[#A3D1CD]">
-                        <span class="font-medium hidden sm:inline text-slate-700">   {{ Auth::user()->name }}</span>
+                        <img 
+            src="{{ Auth::user()->profile_photo 
+                    ? asset('storage/' . Auth::user()->profile_photo) 
+                    : asset('img/default-avatar.png') }}"
+            alt="Profile"
+            class="w-9 h-9 rounded-full ring-2 ring-offset-2 ring-[#A3D1CD]"
+        >
+        <span class="font-medium hidden sm:inline text-slate-700">
+            {{ Auth::user()->name }}
+        </span> 
                     </button>
                     <div id="profileMenu" class="hidden absolute right-0 mt-3 w-48 bg-white shadow-xl rounded-lg overflow-hidden z-50 border border-slate-100">
-  <a href="#" class="block px-4 py-2 text-sm  border border-slate-100 text-slate-700 hover:bg-slate-100">
+  <a href={{ route('profile.show') }} class="block px-4 py-2 text-sm  border border-slate-100 text-slate-700 hover:bg-slate-100">
     Ubah Data Diri
   </a>
   

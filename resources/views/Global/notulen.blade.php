@@ -102,11 +102,18 @@
                 {{-- Header Pokok Bahasan --}}
                 <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-3 border-b border-slate-200 pb-4">
                     <h3 class="text-xl font-bold text-slate-800">{{ $b->judul }}</h3>
-                    <button class="open-modal-btn flex items-center gap-2 text-sm font-semibold bg-custom-teal-light text-custom-teal-dark px-3 py-1.5 rounded-md hover:bg-custom-teal hover:text-white transition-all"
-                            title="Tambah Keputusan" data-id="{{ $loop->index }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
-                        Keputusan
-                    </button>
+           {{-- Aksi --}}
+    <div class="flex gap-3 flex-wrap"> {{-- Tambahkan flex-wrap untuk responsivitas --}}
+        <button class="delete-item-btn flex items-center gap-1 text-sm font-semibold bg-red-100 text-red-700 px-3 py-1.5 rounded-md hover:bg-red-200 transition-all whitespace-nowrap"
+                title="Hapus Pokok Bahasan" data-type="pokok" data-id="{{ $loop->index }}">
+            Hapus
+        </button>
+        <button class="open-modal-btn flex items-center gap-2 text-sm font-semibold bg-custom-teal-light text-custom-teal-dark px-3 py-1.5 rounded-md hover:bg-custom-teal hover:text-white transition-all whitespace-nowrap"
+                title="Tambah Keputusan" data-id="{{ $loop->index }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+            Keputusan
+        </button>
+    </div>
                 </div>
 
                 {{-- Konten Keputusan --}}
@@ -115,11 +122,18 @@
                     <div class="pl-5 border-l-4 border-custom-teal space-y-3">
                         <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-3">
                             <p class="font-semibold text-slate-700 leading-relaxed">{{ $k->isi_keputusan }}</p>
-                            <button class="open-modal-btn flex items-center gap-2 text-sm font-semibold bg-custom-teal-light text-custom-teal-dark px-3 py-1.5 rounded-md hover:bg-custom-teal hover:text-white transition-all whitespace-nowrap"
-                                    title="Tambah Tindakan" data-id="{{ $loop->parent->index }}-{{ $loop->index }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
-                                Tindakan
-                            </button>
+                           {{-- Aksi Keputusan --}}
+    <div class="flex gap-3 flex-wrap"> {{-- Tambahkan flex-wrap --}}
+        <button class="delete-item-btn flex items-center gap-1 text-sm font-semibold bg-red-100 text-red-700 px-3 py-1.5 rounded-md hover:bg-red-200 transition-all whitespace-nowrap"
+                title="Hapus Keputusan" data-type="keputusan" data-id="{{ $loop->parent->index }}-{{ $loop->index }}">
+            Hapus
+        </button>
+        <button class="open-modal-btn flex items-center gap-2 text-sm font-semibold bg-custom-teal-light text-custom-teal-dark px-3 py-1.5 rounded-md hover:bg-custom-teal hover:text-white transition-all whitespace-nowrap"
+                title="Tambah Tindakan" data-id="{{ $loop->parent->index }}-{{ $loop->index }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+            Tindakan
+        </button>
+    </div>
                         </div>
 
                         {{-- Loop Tindakan --}}
@@ -132,7 +146,19 @@
                                 <div class="flex items-center gap-2 bg-white px-2.5 py-1 rounded-full border border-slate-200">
                                      <span class="text-xs font-bold text-slate-600">{{ $t->pic->name }}</span>
                                 </div>
+                                 @if($t->deadline)
+    <div class="text-xs text-slate-600">
+        Deadline: <span class="font-semibold text-red-600">
+            {{ \Carbon\Carbon::parse($t->deadline)->format('d M Y') }}
+        </span>
+    </div>
+@endif
                                 @endif
+{{-- TOMBOL HAPUS TINDAKAN --}}
+        <button class="delete-item-btn flex items-center gap-1 text-xs font-semibold bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 transition-all whitespace-nowrap"
+                title="Hapus Tindakan" data-type="tindakan" data-id="{{ $loop->parent->parent->index }}-{{ $loop->parent->index }}-{{ $loop->index }}">
+            Hapus
+        </button>
                             </div>
                         @empty
                             <p class="text-sm text-slate-500 italic">Belum ada tindakan yang ditambahkan.</p>
@@ -191,6 +217,12 @@
               <option value="{{ $user->id }}">{{ $user->name }}</option>
             @endforeach
           </select>
+          <div>
+            <br>
+  <label for="deadlineTindakan" class="block text-sm font-medium text-slate-700 mb-1">Batas Waktu (Deadline)</label>
+  <input type="date" id="deadlineTindakan" name="deadline"
+      class="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 ring-custom-teal focus:border-custom-teal transition">
+</div>
         </div>
       </div>
 
@@ -204,244 +236,411 @@
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('itemModal');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalType = document.getElementById('modalType');
-  const targetId = document.getElementById('targetId');
-  const fieldPokok = document.getElementById('fieldPokok');
-  const fieldKeputusan = document.getElementById('fieldKeputusan');
-  const fieldTindakan = document.getElementById('fieldTindakan');
-  const inputPokok = document.getElementById('inputPokok');
-  const inputKeputusan = document.getElementById('inputKeputusan');
-  const inputTindakan = document.getElementById('inputTindakan');
-  const selectPic = document.getElementById('selectPic');
-  const modalForm = document.getElementById('modalForm');
+    const modal = document.getElementById('itemModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalType = document.getElementById('modalType');
+    const targetId = document.getElementById('targetId');
+    const fieldPokok = document.getElementById('fieldPokok');
+    const fieldKeputusan = document.getElementById('fieldKeputusan');
+    const fieldTindakan = document.getElementById('fieldTindakan');
+    const inputPokok = document.getElementById('inputPokok');
+    const inputKeputusan = document.getElementById('inputKeputusan');
+    const inputTindakan = document.getElementById('inputTindakan');
+    const selectPic = document.getElementById('selectPic');
+    const modalForm = document.getElementById('modalForm');
 
-  // Inisialisasi draftData dengan struktur yang benar - GUNAKAN isi_keputusan
-  const draftData = {
-    notulen_id: {{ $notulen->id ?? 'null' }},
-    rapat_id: {{ $rapat->id }},
-    pembuat_id: {{ auth()->id() }},
-    pokok_bahasan: {!! $bahasan->isEmpty() ? '[]' : json_encode($bahasan->map(function($b) {
-        return [
-            'judul' => $b->judul,
-            'keputusan' => $b->keputusans->map(function($k) {
-                return [
-                    'isi_keputusan' => $k->isi_keputusan, // KEY YANG BENAR
-                    'tindakan' => $k->tindakans->map(function($t) {
-                        return [
-                            'deskripsi' => $t->deskripsi,
-                            'pic_id' => $t->pic_id
-                        ];
-                    })->toArray()
-                ];
-            })->toArray()
-        ];
-    })) !!}
-  };
-
-  // Fungsi untuk debug draft data
-  function debugDraft() {
-    console.log("🔍 DEBUG DRAFT DATA:", draftData);
+    // Inisialisasi draftData dengan struktur yang benar
+    let draftData = {
+        notulen_id: {{ $notulen->id ?? 'null' }},
+        rapat_id: {{ $rapat->id }},
+        pembuat_id: {{ auth()->id() }},
+        pokok_bahasan: {!! $bahasan->isEmpty() ? '[]' : json_encode($bahasan->map(function($b) {
+            return [
+                'judul' => $b->judul,
+                'keputusan' => $b->keputusans->map(function($k) {
+                    return [
+                        'isi_keputusan' => $k->isi_keputusan,
+                        'tindakan' => $k->tindakans->map(function($t) {
+                            return [
+                                'deskripsi' => $t->deskripsi,
+                                'pic_id' => $t->pic_id,
+                                'deadline' => $t->deadline
+                            ];
+                        })->toArray()
+                    ];
+                })->toArray()
+            ];
+        })) !!}
+    };
     
-    if (draftData.pokok_bahasan) {
-        console.log("Jumlah pokok bahasan:", draftData.pokok_bahasan.length);
-        draftData.pokok_bahasan.forEach((pokok, index) => {
-            console.log(`Pokok ${index}:`, pokok.judul);
+    // Konversi array JSON string kembali ke objek JavaScript
+    if (typeof draftData.pokok_bahasan === 'string') {
+        draftData.pokok_bahasan = JSON.parse(draftData.pokok_bahasan);
+    }
+    
+    // --- FUNGSI UTAMA ---
+
+    // Fungsi untuk debug draft data
+    function debugDraft() {
+        console.log("🔍 DEBUG DRAFT DATA:", draftData);
+    }
+
+    // Close modal
+    function closeModal() {
+        modal.querySelector('.modal-content').classList.add('scale-95');
+        modal.classList.add('opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modalForm.reset();
+        }, 300);
+    }
+
+    // Fungsi untuk memasang kembali event listeners (perlu dipanggil setiap kali konten di-render ulang)
+    function attachEventListeners() {
+        // Re-attach modal listeners
+        document.querySelectorAll('.open-modal-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                e.preventDefault();
+                const title = btn.title;
+                const id = btn.dataset.id || null;
+                targetId.value = id;
+
+                // Reset field visibility
+                [fieldPokok, fieldKeputusan, fieldTindakan].forEach(el => el.classList.add('hidden'));
+                
+                // Clear inputs
+                inputPokok.value = '';
+                inputKeputusan.value = '';
+                inputTindakan.value = '';
+                document.getElementById('deadlineTindakan').value = '';
+
+                if (title.includes('Pokok')) {
+                    modalType.value = 'pokok';
+                    fieldPokok.classList.remove('hidden');
+                    modalTitle.textContent = 'Tambah Pokok Bahasan';
+                } else if (title.includes('Keputusan')) {
+                    modalType.value = 'keputusan';
+                    fieldKeputusan.classList.remove('hidden');
+                    modalTitle.textContent = 'Tambah Keputusan';
+                } else if (title.includes('Tindakan')) {
+                    modalType.value = 'tindakan';
+                    fieldTindakan.classList.remove('hidden');
+                    modalTitle.textContent = 'Tambah Tindakan';
+                }
+
+                modal.classList.remove('hidden', 'opacity-0');
+                modal.querySelector('.modal-content').classList.remove('scale-95');
+                debugDraft();
+            };
+        });
+
+        // Attach delete listeners
+        document.querySelectorAll('.delete-item-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                e.preventDefault();
+                const type = btn.dataset.type;
+                const id = btn.dataset.id;
+                deleteItem(type, id);
+            };
+        });
+    }
+
+    // Fungsi untuk menghapus item dari draftData
+    function deleteItem(type, id) {
+        if (!confirm(`Apakah Anda yakin ingin menghapus ${type} ini? Tindakan ini tidak dapat dibatalkan.`)) {
+            return;
+        }
+
+        if (type === 'pokok') {
+            const pIdx = parseInt(id);
+            if (draftData.pokok_bahasan[pIdx]) {
+                draftData.pokok_bahasan.splice(pIdx, 1);
+                console.log("❌ Pokok Bahasan dihapus pada index:", pIdx);
+            }
+        } else if (type === 'keputusan') {
+            const [pIdx, kIdx] = id.split('-').map(Number);
+            if (draftData.pokok_bahasan[pIdx] && draftData.pokok_bahasan[pIdx].keputusan[kIdx]) {
+                draftData.pokok_bahasan[pIdx].keputusan.splice(kIdx, 1);
+                console.log("❌ Keputusan dihapus pada index:", pIdx, kIdx);
+            }
+        } else if (type === 'tindakan') {
+            const [pIdx, kIdx, tIdx] = id.split('-').map(Number);
+            if (draftData.pokok_bahasan[pIdx] && draftData.pokok_bahasan[pIdx].keputusan[kIdx] && draftData.pokok_bahasan[pIdx].keputusan[kIdx].tindakan[tIdx]) {
+                draftData.pokok_bahasan[pIdx].keputusan[kIdx].tindakan.splice(tIdx, 1);
+                console.log("❌ Tindakan dihapus pada index:", pIdx, kIdx, tIdx);
+            }
+        }
+
+        debugDraft();
+        renderRapatContent(); // Panggil fungsi render ulang setelah penghapusan
+    }
+
+
+    // Fungsi untuk me-render ulang konten utama
+    function renderRapatContent() {
+        console.log("🔄 Rendering content dengan draftData terbaru...");
+
+        const mainContent = document.querySelector('main .space-y-6'); 
+        let htmlContent = '';
+        
+        // Asumsi data user tersedia untuk menampilkan nama PIC
+        const users = {!! App\Models\User::all()->pluck('name', 'id') !!};
+
+        if (draftData.pokok_bahasan && draftData.pokok_bahasan.length > 0) {
+            draftData.pokok_bahasan.forEach((b, pIndex) => {
+                let keputusanHtml = '';
+                if (b.keputusan && b.keputusan.length > 0) {
+                    b.keputusan.forEach((k, kIndex) => {
+                        let tindakanHtml = '';
+                        if (k.tindakan && k.tindakan.length > 0) {
+                            k.tindakan.forEach((t, tIndex) => {
+                                const picName = t.pic_id ? users[t.pic_id] : 'N/A';
+                                const picInfo = t.pic_id ? 
+                                    `<div class="flex items-center gap-2 bg-white px-2.5 py-1 rounded-full border border-slate-200"><span class="text-xs font-bold text-slate-600">${picName}</span></div>` : '';
+                                const deadlineDisplay = t.deadline ? 
+                                    `Deadline: <span class="font-semibold text-red-600">${new Date(t.deadline).toLocaleDateString('id-ID', {day: '2-digit', month: 'short', year: 'numeric'})}</span>` : '';
+
+                                tindakanHtml += `
+                                    <div class="group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-100 border border-slate-200 p-3 pr-2 rounded-lg relative hover:bg-slate-200 transition-colors">
+                                        <p class="text-sm text-slate-800 flex-1">${k.isi_keputusan}</p>
+                                        
+                                        <div class="flex items-center gap-3 flex-wrap">
+                                            ${picInfo}
+                                            <div class="text-xs text-slate-600 whitespace-nowrap">${deadlineDisplay}</div>
+                                            
+                                            <button class="delete-item-btn flex items-center gap-1 text-xs font-semibold bg-red-100 text-red-700 px-2 py-1 rounded-md hover:bg-red-200 transition-all whitespace-nowrap"
+                                                    title="Hapus Tindakan" data-type="tindakan" data-id="${pIndex}-${kIndex}-${tIndex}">
+                                                Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        } else {
+                            tindakanHtml = `<p class="text-sm text-slate-500 italic">Belum ada tindakan yang ditambahkan.</p>`;
+                        }
+
+                        keputusanHtml += `
+                            <div class="pl-5 border-l-4 border-custom-teal space-y-3">
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-3">
+                                    <p class="font-semibold text-slate-700 leading-relaxed">${k.isi_keputusan}</p>
+                                    <div class="flex gap-3 flex-wrap">
+                                        <button class="delete-item-btn flex items-center gap-1 text-sm font-semibold bg-red-100 text-red-700 px-3 py-1.5 rounded-md hover:bg-red-200 transition-all whitespace-nowrap"
+                                                title="Hapus Keputusan" data-type="keputusan" data-id="${pIndex}-${kIndex}">
+                                            Hapus
+                                        </button>
+                                        <button class="open-modal-btn flex items-center gap-2 text-sm font-semibold bg-custom-teal-light text-custom-teal-dark px-3 py-1.5 rounded-md hover:bg-custom-teal hover:text-white transition-all whitespace-nowrap"
+                                                title="Tambah Tindakan" data-id="${pIndex}-${kIndex}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                                            Tindakan
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="space-y-2 pt-2">${tindakanHtml}</div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    keputusanHtml = `<p class="text-sm text-slate-500 italic pl-2">Belum ada keputusan yang ditambahkan.</p>`;
+                }
+
+                htmlContent += `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-5">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-3 border-b border-slate-200 pb-4">
+                            <h3 class="text-xl font-bold text-slate-800">${b.judul}</h3>
+                            <div class="flex gap-3 flex-wrap">
+                                <button class="delete-item-btn flex items-center gap-1 text-sm font-semibold bg-red-100 text-red-700 px-3 py-1.5 rounded-md hover:bg-red-200 transition-all whitespace-nowrap"
+                                        title="Hapus Pokok Bahasan" data-type="pokok" data-id="${pIndex}">
+                                    Hapus
+                                </button>
+                                <button class="open-modal-btn flex items-center gap-2 text-sm font-semibold bg-custom-teal-light text-custom-teal-dark px-3 py-1.5 rounded-md hover:bg-custom-teal hover:text-white transition-all whitespace-nowrap"
+                                        title="Tambah Keputusan" data-id="${pIndex}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                                    Keputusan
+                                </button>
+                            </div>
+                        </div>
+                        <div class="space-y-4">${keputusanHtml}</div>
+                    </div>
+                `;
+            });
+        } else {
+            // Tampilkan placeholder jika kosong
+            htmlContent = `
+                <div class="p-8 bg-white border-2 border-dashed border-slate-300 rounded-xl text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <h3 class="mt-2 text-lg font-medium text-slate-800">Mulai Buat Notulen</h3>
+                    <p class="mt-1 text-sm text-slate-500">Klik tombol "Tambah Pokok Bahasan" untuk memulai.</p>
+                </div>
+            `;
+        }
+
+        mainContent.innerHTML = htmlContent;
+        
+        // PENTING: Pasang kembali event listener untuk modal dan tombol hapus yang baru di-render
+        attachEventListeners();
+    }
+
+
+    // --- INISIALISASI EVENT LISTENERS ---
+
+    // Panggil fungsi attachEventListeners saat DOMContentLoaded pertama kali
+    attachEventListeners();
+
+    document.getElementById('closeModalBtn').onclick = closeModal;
+    document.getElementById('cancelModalBtn').onclick = closeModal;
+    modal.addEventListener('click', (e) => {
+        if(e.target === modal) closeModal();
+    });
+
+    // Add to draft
+    modalForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const type = modalType.value;
+        const id = targetId.value;
+
+        if (type === 'pokok') {
+            if (!draftData.pokok_bahasan) {
+                draftData.pokok_bahasan = [];
+            }
+            draftData.pokok_bahasan.push({ 
+                judul: inputPokok.value, 
+                keputusan: [] 
+            });
+            console.log("✅ Pokok bahasan ditambahkan:", inputPokok.value);
+            
+        } else if (type === 'keputusan') {
+            const index = parseInt(id);
+            
+            if (!draftData.pokok_bahasan || !draftData.pokok_bahasan[index]) {
+                console.error("❌ Pokok bahasan tidak ditemukan:", index);
+                alert("Error: Pokok bahasan tidak ditemukan. Silakan refresh halaman.");
+                return;
+            }
+            
+            if (!draftData.pokok_bahasan[index].keputusan) {
+                draftData.pokok_bahasan[index].keputusan = [];
+            }
+            
+            draftData.pokok_bahasan[index].keputusan.push({ 
+                isi_keputusan: inputKeputusan.value, 
+                tindakan: [] 
+            });
+            console.log("✅ Keputusan ditambahkan ke pokok", index, ":", inputKeputusan.value);
+            
+        } else if (type === 'tindakan') {
+            const [pIdx, kIdx] = id.split('-').map(Number);
+            
+            if (!draftData.pokok_bahasan || 
+                !draftData.pokok_bahasan[pIdx] || 
+                !draftData.pokok_bahasan[pIdx].keputusan || 
+                !draftData.pokok_bahasan[pIdx].keputusan[kIdx]) {
+                console.error("❌ Keputusan tidak ditemukan:", pIdx, kIdx);
+                alert("Error: Keputusan tidak ditemukan. Silakan refresh halaman.");
+                return;
+            }
+            
+            if (!draftData.pokok_bahasan[pIdx].keputusan[kIdx].tindakan) {
+                draftData.pokok_bahasan[pIdx].keputusan[kIdx].tindakan = [];
+            }
+            
+            draftData.pokok_bahasan[pIdx].keputusan[kIdx].tindakan.push({ 
+                deskripsi: inputTindakan.value, 
+                pic_id: parseInt(selectPic.value),
+                deadline: document.getElementById('deadlineTindakan').value
+            });
+            console.log("✅ Tindakan ditambahkan:", inputTindakan.value);
+        }
+
+        console.log("📦 Draft diperbarui:", draftData);
+        renderRapatContent(); // Render ulang setelah penambahan
+        closeModal();
+    });
+
+    // Save notulen
+    const formNotulen = document.querySelector('#saveNotulenForm');
+    
+    if (formNotulen) {
+        // Ensure form is visible and can be submitted
+        formNotulen.style.display = 'block';
+        
+        formNotulen.addEventListener('submit', async e => {
+            e.preventDefault();
+        
+        // Validasi data sebelum dikirim (minimal harus ada 1 pokok bahasan)
+        if (!draftData.pokok_bahasan || draftData.pokok_bahasan.length === 0) {
+            alert('⚠️ Harap tambahkan minimal satu Pokok Bahasan sebelum menyimpan Notulen.');
+            return;
+        }
+
+        let isValid = true;
+        let errorMessage = '';
+        
+        draftData.pokok_bahasan.forEach((pokok) => {
+            if (!pokok.judul || pokok.judul.trim() === '') {
+                 isValid = false;
+                 errorMessage = 'Judul Pokok Bahasan tidak boleh kosong.';
+            }
+            
             if (pokok.keputusan) {
-                console.log(`  Jumlah keputusan:`, pokok.keputusan.length);
-                pokok.keputusan.forEach((kep, kIndex) => {
-                    console.log(`    Keputusan ${kIndex}:`, kep.isi_keputusan);
+                pokok.keputusan.forEach((keputusan) => {
+                    if (!keputusan.hasOwnProperty('isi_keputusan') || !keputusan.isi_keputusan || keputusan.isi_keputusan.trim() === '') {
+                        isValid = false;
+                        errorMessage = `Keputusan kosong ditemukan di pokok bahasan "${pokok.judul}"`;
+                    }
                 });
             }
         });
-    }
-  }
-
-  // Open modal
-  document.querySelectorAll('.open-modal-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      const title = btn.title;
-      const id = btn.dataset.id || null;
-      targetId.value = id;
-
-      [fieldPokok, fieldKeputusan, fieldTindakan].forEach(el => el.classList.add('hidden'));
-
-      if (title.includes('Pokok')) {
-        modalType.value = 'pokok';
-        fieldPokok.classList.remove('hidden');
-        modalTitle.textContent = 'Tambah Pokok Bahasan';
-      } else if (title.includes('Keputusan')) {
-        modalType.value = 'keputusan';
-        fieldKeputusan.classList.remove('hidden');
-        modalTitle.textContent = 'Tambah Keputusan';
-      } else if (title.includes('Tindakan')) {
-        modalType.value = 'tindakan';
-        fieldTindakan.classList.remove('hidden');
-        modalTitle.textContent = 'Tambah Tindakan';
-      }
-
-      modal.classList.remove('hidden', 'opacity-0');
-      modal.querySelector('.modal-content').classList.remove('scale-95');
-      
-      // Debug untuk memastikan data tersedia
-      debugDraft();
-    });
-  });
-
-  // Close modal
-  function closeModal() {
-    modal.querySelector('.modal-content').classList.add('scale-95');
-    modal.classList.add('opacity-0');
-    setTimeout(() => {
-        modal.classList.add('hidden');
-        modalForm.reset();
-    }, 300);
-  }
-  document.getElementById('closeModalBtn').onclick = closeModal;
-  document.getElementById('cancelModalBtn').onclick = closeModal;
-  modal.addEventListener('click', (e) => {
-      if(e.target === modal) closeModal();
-  });
-
-  // Add to draft - GUNAKAN isi_keputusan BUKAN isi
-  modalForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const type = modalType.value;
-    const id = targetId.value;
-
-    console.log("🔍 Type:", type, "ID:", id, "Draft:", draftData);
-
-    if (type === 'pokok') {
-        // Tambah pokok bahasan baru
-        if (!draftData.pokok_bahasan) {
-            draftData.pokok_bahasan = [];
-        }
-        draftData.pokok_bahasan.push({ 
-            judul: inputPokok.value, 
-            keputusan: [] 
-        });
-        console.log("✅ Pokok bahasan ditambahkan:", inputPokok.value);
         
-    } else if (type === 'keputusan') {
-        // Tambah keputusan ke pokok bahasan tertentu - GUNAKAN isi_keputusan
-        const index = parseInt(id);
-        
-        // Pastikan array pokok_bahasan ada dan index valid
-        if (!draftData.pokok_bahasan || !draftData.pokok_bahasan[index]) {
-            console.error("❌ Pokok bahasan tidak ditemukan:", index, draftData.pokok_bahasan);
-            alert("Error: Pokok bahasan tidak ditemukan. Silakan refresh halaman.");
+        if (!isValid) {
+            alert('⚠️ ' + errorMessage + '. Silakan lengkapi sebelum menyimpan.');
             return;
         }
-        
-        // Inisialisasi array keputusan jika belum ada
-        if (!draftData.pokok_bahasan[index].keputusan) {
-            draftData.pokok_bahasan[index].keputusan = [];
-        }
-        
-        draftData.pokok_bahasan[index].keputusan.push({ 
-            isi_keputusan: inputKeputusan.value, // INI YANG DIPERBAIKI
-            tindakan: [] 
-        });
-        console.log("✅ Keputusan ditambahkan ke pokok", index, ":", inputKeputusan.value);
-        
-    } else if (type === 'tindakan') {
-        // Tambah tindakan ke keputusan tertentu
-        const [pIdx, kIdx] = id.split('-').map(Number);
-        
-        // Validasi struktur data
-        if (!draftData.pokok_bahasan || 
-            !draftData.pokok_bahasan[pIdx] || 
-            !draftData.pokok_bahasan[pIdx].keputusan || 
-            !draftData.pokok_bahasan[pIdx].keputusan[kIdx]) {
-            console.error("❌ Keputusan tidak ditemukan:", pIdx, kIdx, draftData);
-            alert("Error: Keputusan tidak ditemukan. Silakan refresh halaman.");
-            return;
-        }
-        
-        // Inisialisasi array tindakan jika belum ada
-        if (!draftData.pokok_bahasan[pIdx].keputusan[kIdx].tindakan) {
-            draftData.pokok_bahasan[pIdx].keputusan[kIdx].tindakan = [];
-        }
-        
-        draftData.pokok_bahasan[pIdx].keputusan[kIdx].tindakan.push({ 
-            deskripsi: inputTindakan.value, 
-            pic_id: parseInt(selectPic.value) 
-        });
-        console.log("✅ Tindakan ditambahkan:", inputTindakan.value);
-    }
 
-    console.log("📦 Draft diperbarui:", draftData);
-    closeModal();
-  });
-// Save notulen
-const formNotulen = document.querySelector('#saveNotulenForm');
-formNotulen.addEventListener('submit', async e => {
-    e.preventDefault();
-    
-    // Validasi data sebelum dikirim
-    let isValid = true;
-    let errorMessage = '';
-    
-    draftData.pokok_bahasan.forEach((pokok, pIndex) => {
-        if (pokok.keputusan) {
-            pokok.keputusan.forEach((keputusan, kIndex) => {
-                // Pastikan key isi_keputusan ada dan tidak kosong
-                if (!keputusan.hasOwnProperty('isi_keputusan') || !keputusan.isi_keputusan || keputusan.isi_keputusan.trim() === '') {
-                    isValid = false;
-                    errorMessage = `Keputusan kosong ditemukan di pokok bahasan "${pokok.judul}"`;
-                }
+        // Siapkan payload dengan SEMUA field yang diperlukan
+        const payload = {
+            notulen_id: draftData.notulen_id,
+            rapat_id: draftData.rapat_id,
+            pembuat_id: draftData.pembuat_id,
+            judul: "{{ $rapat->judul }}", 
+            tanggal: "{{ $rapat->tanggal }}", 
+            pokok_bahasan: draftData.pokok_bahasan,
+            _token: "{{ csrf_token() }}"
+        };
+
+        try {
+            console.log("📤 Mengirim data:", payload);
+            
+            const response = await fetch("{{ route('notulen.store') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                body: JSON.stringify(payload)
             });
-        }
-    });
-    
-    if (!isValid) {
-        alert('⚠️ ' + errorMessage + '. Silakan lengkapi sebelum menyimpan.');
-        return;
-    }
 
-    // Siapkan payload dengan SEMUA field yang diperlukan
-    const payload = {
-        notulen_id: draftData.notulen_id,
-        rapat_id: draftData.rapat_id,
-        pembuat_id: draftData.pembuat_id,
-        judul: "{{ $rapat->agenda }}", // Ambil dari rapat agenda
-        tanggal: "{{ $rapat->tanggal }}", // Ambil dari rapat tanggal
-        pokok_bahasan: draftData.pokok_bahasan,
-        _token: "{{ csrf_token() }}"
-    };
+            const result = await response.json();
 
-    try {
-        console.log("📤 Mengirim data:", payload);
-        
-        const response = await fetch("{{ route('notulen.store') }}", {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            alert(result.message);
-            // Update notulen_id jika ada dari response
-            if (result.notulen_id) {
-                draftData.notulen_id = result.notulen_id;
+            if (response.ok) {
+                alert(result.message);
+                // Update notulen_id jika ada dari response (untuk update berikutnya)
+                if (result.notulen_id) {
+                    draftData.notulen_id = result.notulen_id;
+                }
+                window.location.reload(); 
+            } else {
+                alert("⚠️ Gagal menyimpan Notulen: " + (result.message || "Terjadi kesalahan server."));
             }
-            window.location.reload(); 
-        } else {
-            alert("⚠️ " + result.message);
+        } catch (error) {
+            console.error(error);
+            alert("❌ Terjadi kesalahan saat menyimpan notulen.");
         }
-    } catch (error) {
-        console.error(error);
-        alert("❌ Terjadi kesalahan saat menyimpan notulen.");
+        });
+    } else {
+        console.warn("⚠️ Form #saveNotulenForm tidak ditemukan di DOM");
     }
-});
 });
 </script>
 @endsection

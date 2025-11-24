@@ -33,4 +33,9 @@ public function notulen()
 {
     return $this->hasOne(Notulen::class);
 }
+
+public function attendances()
+{
+    return $this->hasMany(Attendance::class);
+}
 }

@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\RapatController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\BacklogController;
 use App\Http\Controllers\NotulenController;
 use App\Http\Controllers\DashboardController;
 
@@ -111,7 +113,9 @@ Route::resource('groups', GroupController::class) ->middleware(['auth','role:adm
 Route::get('/groups/{id}/edit', [App\Http\Controllers\GroupController::class, 'editAjax'])->name('groups.edit.ajax');
 
 
-route::view('/viewlive', 'global.dashboard')->name('viewlive');
+route::view('/viewlive', 'kanban')->name('viewlive');
+// route::get('/kanban', [BacklogController::class, 'index'])->name('backlog.index');
+Route::post('/tugas-saya/update-status/{tindakan}', [BacklogController::class, 'updateStatus'])->name('backlog.updateStatus');
 
 
 route::view('/rekapnotulensi', 'global.notuleensimanagement')->name('rekapnotulensi');
@@ -134,6 +138,14 @@ Route::prefix('notulen')->group(function () {
     Route::post('/pokok/{pokokId}/keputusan', [NotulenController::class, 'storeKeputusan'])->name('notulen.storeKeputusan');
     Route::post('/keputusan/{keputusanId}/tindakan', [NotulenController::class, 'storeTindakan'])->name('notulen.storeTindakan');
 
+    // Hapus Pokok Bahasan berdasarkan ID-nya
+Route::delete('/pokok/{pokok}', [NotulenController::class, 'destroyPokokBahasan'])->name('notulen.destroyPokok');
+// Hapus Keputusan berdasarkan ID-nya
+Route::delete('/keputusan/{keputusan}', [NotulenController::class, 'destroyKeputusan'])->name('notulen.destroyKeputusan');
+// Hapus Tindakan berdasarkan ID-nya
+Route::delete('/tindakan/{tindakan}', [NotulenController::class, 'destroyTindakan'])->name('notulen.destroyTindakan');
+
+
     // PENTING: ini harus paling bawah!
     Route::get('/{notulen}', [NotulenController::class, 'show'])->name('notulen.show');
 });
@@ -143,3 +155,28 @@ Route::prefix('notulen')->group(function () {
 // Route::delete('/pokok-bahasan/{id}', [PokokBahasanController::class, 'destroy'])->name('pokokBahasan.destroy');
 // Route::delete('/keputusan/{id}', [KeputusanController::class, 'destroy'])->name('keputusan.destroy');
 // Route::delete('/tindakan/{id}', [TindakanController::class, 'destroy'])->name('tindakan.destroy');
+
+
+// BACKLOG
+Route::get('/backlogs', [BacklogController::class, 'index'])->name('backlogs.index');
+Route::post('/backlogs', [BacklogController::class, 'store'])->name('backlogs.store');
+// Route::put('/backlogs/{id}', [BacklogController::class, 'update'])->name('backlogs.update');
+
+
+
+Route::get('/rapat/{id}/qr-code', [RapatController::class, 'generateQrCode'])->name('rapat.qr');
+
+// Route untuk menampilkan halaman QR (yang menampilkan gambar QR)
+Route::get('/rapat/{rapat}/qr', [AttendanceController::class, 'showQrPage'])->name('rapat.qr.page');
+
+// Halaman universal untuk absensi via QR (terima rapat_id sebagai query parameter)
+Route::get('/absensi/scan', [AttendanceController::class, 'showForm'])->name('absensi.scan.form');
+// Quick/auto scan: langsung mencatat kehadiran saat link dikunjungi (digunakan untuk QR yang langsung absen)
+Route::get('/absensi/scan/auto', [AttendanceController::class, 'quickScan'])->name('absensi.scan.auto');
+Route::post('/absensi/scan', [AttendanceController::class, 'store'])->name('absensi.scan.store');
+
+// Route untuk menampilkan hasil absensi rapat
+Route::get('/rapat/{rapat}/absensi', [AttendanceController::class, 'showAbsensi'])->name('rapat.absensi');
+
+
+route::view('/logbook', 'global.profilecustom')->name('profilecustom');  

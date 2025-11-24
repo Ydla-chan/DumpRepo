@@ -54,116 +54,121 @@ class NotulenController extends Controller
     }
 
     /**
-     * Simpan notulen baru yang terhubung ke rapat.
+     * Simpan/Update notulen dan semua data nested (Pokok Bahasan, Keputusan, Tindakan)
      */
-  
-public function store(Request $request)
-{
-    Log::info('📩 Data diterima di NotulenController@store', $request->all());
+    public function store(Request $request)
+    {
+        Log::info('📩 Data diterima di NotulenController@store', $request->all());
 
-    try {
-        $data = $request->json()->all();
-        if (empty($data)) {
-            $data = $request->all();
-        }
+        try {
+            $data = $request->json()->all();
+            if (empty($data)) {
+                $data = $request->all();
+            }
 
-        Log::info('📦 Data setelah parsing:', $data);
+            Log::info('📦 Data setelah parsing:', $data);
 
-        // Validasi
-        $validated = validator($data, [
-            'rapat_id'   => 'required|integer|exists:rapats,id',
-            'pembuat_id' => 'nullable|integer|exists:users,id',
-            'notulen_id' => 'nullable|integer|exists:notulens,id',
-            'judul'      => 'required|string',
-            'tanggal'    => 'required|date',
-            'pokok_bahasan' => 'required|array',
-            'pokok_bahasan.*.judul' => 'required|string',
-            'pokok_bahasan.*.keputusan' => 'array',
-            'pokok_bahasan.*.keputusan.*.isi_keputusan' => 'required|string',
-            'pokok_bahasan.*.keputusan.*.tindakan' => 'array',
-            'pokok_bahasan.*.keputusan.*.tindakan.*.deskripsi' => 'required|string',
-            'pokok_bahasan.*.keputusan.*.tindakan.*.pic_id' => 'required|exists:users,id',
-        ])->validate();
+            // Validasi
+            $validated = validator($data, [
+                'rapat_id'   => 'required|integer|exists:rapats,id',
+                'pembuat_id' => 'nullable|integer|exists:users,id',
+                'notulen_id' => 'nullable|integer|exists:notulens,id',
+                'judul'      => 'required|string',
+                'tanggal'    => 'required|date',
+                'pokok_bahasan' => 'required|array',
+                'pokok_bahasan.*.judul' => 'required|string',
+                'pokok_bahasan.*.keputusan' => 'array',
+                'pokok_bahasan.*.keputusan.*.isi_keputusan' => 'required|string',
+                'pokok_bahasan.*.keputusan.*.tindakan' => 'array',
+                'pokok_bahasan.*.keputusan.*.tindakan.*.deskripsi' => 'required|string',
+                'pokok_bahasan.*.keputusan.*.tindakan.*.pic_id' => 'required|exists:users,id',
+                'pokok_bahasan.*.keputusan.*.tindakan.*.deadline' => 'nullable|date',
+            ])->validate();
 
-        DB::beginTransaction();
+            DB::beginTransaction();
 
-        // 🔍 Jika notulen_id ada → gunakan notulen yang sudah ada
-        if (!empty($validated['notulen_id'])) {
-            $notulen = Notulen::findOrFail($validated['notulen_id']);
-            Log::info('📝 Menggunakan notulen yang sudah ada', ['id' => $notulen->id]);
-            
-            // Update data notulen
-            $notulen->update([
-                'judul' => $validated['judul'],
-                'tanggal' => $validated['tanggal'],
-                'pembuat_id' => $validated['pembuat_id'] ?? auth()->id(),
-            ]);
-        } else {
-            // ✨ Jika belum ada notulen_id → buat baru
-            $notulen = Notulen::create([
-                'rapat_id'   => $validated['rapat_id'],
-                'judul'      => $validated['judul'],
-                'tanggal'    => $validated['tanggal'],
-                'pembuat_id' => $validated['pembuat_id'] ?? auth()->id(),
-            ]);
-        }
-
-        // HAPUS SEMUA DATA LAMA sebelum menyimpan yang baru
-        $notulen->pokokBahasans()->delete();
-
-        // Simpan pokok bahasan, keputusan, tindakan (YANG BARU)
-        if (!empty($data['pokok_bahasan'])) {
-            foreach ($data['pokok_bahasan'] as $pokok) {
-                $bahasan = $notulen->pokokBahasans()->create([
-                    'judul' => $pokok['judul']
+            // 🔍 Jika notulen_id ada → gunakan notulen yang sudah ada
+            if (!empty($validated['notulen_id'])) {
+                $notulen = Notulen::findOrFail($validated['notulen_id']);
+                Log::info('📝 Menggunakan notulen yang sudah ada', ['id' => $notulen->id]);
+                
+                // Update data notulen
+                $notulen->update([
+                    'judul' => $validated['judul'],
+                    'tanggal' => $validated['tanggal'],
+                    'pembuat_id' => $validated['pembuat_id'] ?? auth()->id(),
                 ]);
+            } else {
+                // ✨ Jika belum ada notulen_id → buat baru
+                $notulen = Notulen::create([
+                    'rapat_id'   => $validated['rapat_id'],
+                    'judul'      => $validated['judul'],
+                    'tanggal'    => $validated['tanggal'],
+                    'pembuat_id' => $validated['pembuat_id'] ?? auth()->id(),
+                ]);
+            }
 
-                if (!empty($pokok['keputusan'])) {
-                    foreach ($pokok['keputusan'] as $keputusan) {
-                        $kep = $bahasan->keputusans()->create([
-                            'isi_keputusan' => $keputusan['isi_keputusan']
-                        ]);
+            // HAPUS SEMUA DATA LAMA (PokokBahasan, Keputusan, Tindakan) sebelum menyimpan yang baru
+            // Ini yang memungkinkan penghapusan item dari draft di frontend bekerja!
+            $notulen->pokokBahasans()->delete();
 
-                        if (!empty($keputusan['tindakan'])) {
-                            foreach ($keputusan['tindakan'] as $tindakan) {
-                                $kep->tindakans()->create([
-                                    'deskripsi' => $tindakan['deskripsi'],
-                                    'pic_id'    => $tindakan['pic_id'],
-                                ]);
+            // Simpan pokok bahasan, keputusan, tindakan (YANG BARU dari draft)
+            if (!empty($data['pokok_bahasan'])) {
+                foreach ($data['pokok_bahasan'] as $pokok) {
+                    $bahasan = $notulen->pokokBahasans()->create([
+                        'judul' => $pokok['judul']
+                    ]);
+
+                    if (!empty($pokok['keputusan'])) {
+                        foreach ($pokok['keputusan'] as $keputusan) {
+                            $kep = $bahasan->keputusans()->create([
+                                'isi_keputusan' => $keputusan['isi_keputusan']
+                            ]);
+
+                            if (!empty($keputusan['tindakan'])) {
+                                foreach ($keputusan['tindakan'] as $tindakan) {
+                                    $kep->tindakans()->create([
+                                        'deskripsi' => $tindakan['deskripsi'],
+                                        'pic_id'    => $tindakan['pic_id'],
+                                        'deadline'  => $tindakan['deadline'] ?? null,
+                                        'status' => $tindakan['status'] ?? 'Pending', // Asumsi default status
+                                    ]);
+                                }
                             }
                         }
                     }
                 }
             }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil disimpan ke notulen!',
+                'notulen_id' => $notulen->id,
+            ], 201);
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            
+            Log::error('❌ Gagal menyimpan notulen: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'line' => $e->getLine()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+            ], 500);
         }
-
-        DB::commit();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data berhasil disimpan ke notulen!',
-            'notulen_id' => $notulen->id,
-        ], 201);
-
-    } catch (\Throwable $e) {
-        DB::rollBack();
-        
-        Log::error('❌ Gagal menyimpan notulen: ' . $e->getMessage(), [
-            'trace' => $e->getTraceAsString()
-        ]);
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
-        ], 500);
     }
-}
+
     /**
      * Tampilkan detail lengkap notulen.
      */
     public function show($notulenId)
     {
-        $notulen = Notulen::with(['rapat', 'pokokBahasans.keputusans.tindakans'])->findOrFail($notulenId);
+        $notulen = Notulen::with(['rapat', 'pokokBahasans.keputusans.tindakans.pic'])->findOrFail($notulenId);
         $rapat = $notulen->rapat;
 
         // Kumpulkan data terstruktur
@@ -180,10 +185,8 @@ public function store(Request $request)
 
         return view('global.notulen', compact('notulen', 'rapat', 'bahasan', 'keputusan', 'tindakan'));
     }
-
-    /**
-     * Tambahkan pokok bahasan baru ke notulen.
-     */
+    
+    // --- FUNGSI CREATE CHILD (Tidak diubah) ---
     public function storePokokBahasan(Request $request, $notulenId)
     {
         try {
@@ -206,9 +209,6 @@ public function store(Request $request)
         }
     }
 
-    /**
-     * Tambahkan keputusan baru ke pokok bahasan.
-     */
     public function storeKeputusan(Request $request, $pokokId)
     {
         try {
@@ -231,9 +231,6 @@ public function store(Request $request)
         }
     }
 
-    /**
-     * Tambahkan tindakan baru ke keputusan.
-     */
     public function storeTindakan(Request $request, $keputusanId)
     {
         try {
@@ -250,7 +247,7 @@ public function store(Request $request)
                 'deskripsi' => $request->deskripsi,
                 'pic_id' => $request->pic_id,
                 'deadline' => $request->deadline,
-                'status' => $request->status ?? 'Belum Selesai',
+                'status' => $request->status ?? 'pending',
             ]);
 
             return $request->ajax()
@@ -261,6 +258,78 @@ public function store(Request $request)
             return response()->json(['success' => false, 'message' => 'Gagal menambahkan tindakan', 'error' => $e->getMessage()], 500);
         }
     }
+
+    // --- FUNGSI HAPUS (DELETE) ---
+
+    /**
+     * Hapus Notulen utama dan semua relasi anaknya.
+     */
+    public function destroy(Notulen $notulen)
+    {
+        try {
+            // Asumsi: Relasi sudah di-set CASCADE ON DELETE di migrasi
+            // Jika tidak, Anda perlu menghapus PokokBahasan, Keputusan, dan Tindakan secara manual
+            // $notulen->pokokBahasans()->delete(); // Ini akan menghapus semua anak jika relasi sudah benar
+            
+            $notulen->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Notulen berhasil dihapus secara permanen.'
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus notulen: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus notulen. Terjadi kesalahan server.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Hapus Pokok Bahasan tertentu (Opsional, jika ingin hapus langsung tanpa draft store).
+     */
+    public function destroyPokokBahasan(PokokBahasan $pokok)
+    {
+        try {
+            $pokok->delete();
+            return response()->json(['success' => true, 'message' => 'Pokok Bahasan berhasil dihapus.'], 200);
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus Pokok Bahasan: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Gagal menghapus Pokok Bahasan.'], 500);
+        }
+    }
+
+    /**
+     * Hapus Keputusan tertentu (Opsional).
+     */
+    public function destroyKeputusan(Keputusan $keputusan)
+    {
+        try {
+            $keputusan->delete();
+            return response()->json(['success' => true, 'message' => 'Keputusan berhasil dihapus.'], 200);
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus Keputusan: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Gagal menghapus Keputusan.'], 500);
+        }
+    }
+
+    /**
+     * Hapus Tindakan tertentu (Opsional).
+     */
+    public function destroyTindakan(Tindakan $tindakan)
+    {
+        try {
+            $tindakan->delete();
+            return response()->json(['success' => true, 'message' => 'Tindakan berhasil dihapus.'], 200);
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus Tindakan: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Gagal menghapus Tindakan.'], 500);
+        }
+    }
+    
+    // --- FUNGSI LAIN ---
 
     /**
      * Export notulen ke PDF (opsional).

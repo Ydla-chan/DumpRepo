@@ -101,7 +101,7 @@ s<!-- resources/views/dashboard.blade.php -->
 
                     <div>
                         <div class="text-xs text-gray-500">Role (jika ada)</div>
-                        <div class="font-medium">{{ Auth::user()->role ?? '-' }}</div>
+                        <div class="font-medium">{{ Auth::check() ? (Auth::user()->role ?? '-') : '-' }}</div>
                     </div>
 
                     <div>

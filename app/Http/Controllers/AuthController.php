@@ -130,10 +130,17 @@ class AuthController extends Controller
         session()->forget('verify_email');
 
         Auth::login($user);
+        // Jika ada redirect_after_login (di-set saat akses route perlu login), redirect ke sana
+        $redirect = session('redirect_after_login') ?? session()->pull('redirect_after_login');
+        if ($redirect) {
+            // Hapus session dan redirect ke URL target
+            session()->forget('redirect_after_login');
+            return redirect($redirect)->with('success', 'Login berhasil!');
+        }
 
-    // fallback kalau role belum di-set
-    return redirect()->route('dashboard')
-        ->with('success', 'Login berhasil!');
+        // fallback kalau role belum di-set
+        return redirect()->route('dashboard')
+            ->with('success', 'Login berhasil!');
     }
 
     private function sendOtp($email, $otp)

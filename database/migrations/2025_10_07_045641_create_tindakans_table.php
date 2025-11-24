@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->text('deskripsi')->nullable();
             $table->date('deadline')->nullable();
             $table->enum('status', ['pending', 'in_progress', 'done'])->default('pending');
+            
             $table->timestamps();
         });
     }

@@ -44,21 +44,32 @@
         <span class="nav-text">Rekap Notulensi</span>
     </a>
 
-    {{-- Menu khusus admin --}}
-    @if(Auth::user()->role === 'admin')
-        <a href="/groups"
-           class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
-           {{ Request::is('groups*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 
-                         2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 
-                         3.5V20h14v-3.5C15 14.17 10.33 13 8 13zm8 
-                         0c-.29 0-.62.02-.97.05 1.16.84 1.97 2.07 
-                         1.97 3.45V20h6v-3.5c0-2.33-4.67-3.5-7-3.5z"/>
-            </svg>
-            <span class="nav-text">User Management</span>
-        </a>
-    @endif
+    
+    <!-- Rekap Notulensi -->
+    <a href="/backlogs"
+    class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
+    {{ Request::is('backlogs*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+    </svg>
+    <span class="nav-text">Backlog</span>
+</a>
+{{-- Menu khusus admin --}}
+@if(Auth::check() && Auth::user()->role === 'admin')
+    <a href="/groups"
+       class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
+       {{ Request::is('groups*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 
+                     2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 
+                     3.5V20h14v-3.5C15 14.17 10.33 13 8 13zm8 
+                     0c-.29 0-.62.02-.97.05 1.16.84 1.97 2.07 
+                     1.97 3.45V20h6v-3.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+        <span class="nav-text">User Management</span>
+    </a>
+@endif
 </nav>
 
     </aside>

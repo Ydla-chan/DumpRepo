@@ -24,7 +24,8 @@ class User extends Authenticatable
         'otp_code',
         'otp_expires_at',
         'is_verified',
-        'group_id', // ✅ tambahin ini
+        'group_id', 
+        'profile_photo'// ✅ tambahin ini
     ];
 
     /**
@@ -55,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Group::class);
     }
+
+    public function tindakans()
+{
+    return $this->hasMany(Tindakan::class, 'pic_id', 'id');
+}
 }

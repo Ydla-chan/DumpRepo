@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RapatUndanganMail;
+use SimpleSoftwareIO\QrCode\Facades\QrCode; // Import untuk QR Code
+
 
 class RapatController extends Controller
 {
@@ -18,10 +20,10 @@ class RapatController extends Controller
         // 3. Gunakan paginate untuk membatasi data per halaman (misal: 10)
         $rapats = Rapat::orderBy('tanggal', 'desc')->paginate(10);
 
-        // 4. Kirim data 'rapats' ke view 'rekap-rapat'
+        // 4. Kirim data 'rapats' ke view 'rapatviews'
         return view('rapatviews', ['rapats' => $rapats]);
     }
-  
+    
 
     public function store(Request $request)
     {
@@ -46,19 +48,21 @@ class RapatController extends Controller
         try {
             // Siapkan data dasar
             $dataToSave = [
-                'judul'        => $request->judul,
-                'agenda'      => $request->agenda,
-                'tanggal'     => $request->tanggal,
-                'jam'         => $request->jam,
-                'tipe_lokasi' => $request->tipe_lokasi,
-                'undangan'    => $request->undangan ?? [], // Simpan array undangan
+                'judul'         => $request->judul,
+                'agenda'        => $request->agenda,
+                'tanggal'       => $request->tanggal,
+                'jam'           => $request->jam,
+                'tipe_lokasi'   => $request->tipe_lokasi,
+                'undangan'      => $request->undangan ?? [], // Simpan array undangan
             ];
 
             // Logika Kondisi Lokasi Rapat 
             if ($request->tipe_lokasi === 'online') {
                 $dataToSave['link'] = $request->lokasi;
+                $dataToSave['ruangan'] = null; // Pastikan ruangan kosong
             } else {
                 $dataToSave['ruangan'] = $request->lokasi;
+                $dataToSave['link'] = null; // Pastikan link kosong
             }
 
             // Buat record baru dan simpan objeknya ke variabel $rapat
@@ -82,19 +86,40 @@ class RapatController extends Controller
             return response()->json(['message' => 'Terjadi kesalahan pada server.'], 500);
         }
     }
-public function showDetails($id)
-{
-    $rapat = Rapat::findOrFail($id);
+    
+    /**
+     * Mengambil detail rapat berdasarkan ID.
+     * Digunakan oleh modal detail di frontend.
+     */
+    public function showDetails($id)
+    {
+        $rapat = Rapat::findOrFail($id);
 
-    return response()->json([
-        'judul' => $rapat->judul,
-        'agenda' => $rapat->agenda,
-        'tanggal' => $rapat->tanggal->format('l, d F Y'),
-        'jam' => $rapat->jam,
-        'tipe_lokasi' => $rapat->tipe_lokasi,
-        'ruangan' => $rapat->ruangan,
-        'link' => $rapat->link,
-    ]);
-}
-}
+        return response()->json([
+            'id' => $rapat->id, // Tambahkan ID rapat
+            'judul' => $rapat->judul,
+            'agenda' => $rapat->agenda,
+            'tanggal' => $rapat->tanggal->format('Y-m-d'), // Format ISO untuk JS
+            'jam' => $rapat->jam,
+            'tipe_lokasi' => $rapat->tipe_lokasi,
+            'ruangan' => $rapat->ruangan,
+            'link' => $rapat->link,
+        ]);
+    }
 
+    /**
+     * Menghasilkan QR Code untuk absensi rapat.
+     * Data QR mengarah ke halaman absensi universal dengan parameter rapat_id.
+     */
+    public function generateQrCode(Rapat $rapat)
+    {
+        // URL mengarah ke quick/auto scan sehingga QR langsung mencatat kehadiran
+        $absensiUrl = url("/absensi/scan/auto?rapat_id=" . $rapat->id);
+    
+        return QrCode::size(200) 
+                     ->margin(2)   
+                     ->color(0, 0, 0) 
+                     ->format('svg')
+                     ->generate($absensiUrl);
+    }
+}
