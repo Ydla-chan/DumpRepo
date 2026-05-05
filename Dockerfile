@@ -22,7 +22,13 @@ WORKDIR /var/www/html
 FROM composer:2 AS composer
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+RUN composer install \
+    --no-dev \
+    --no-scripts \
+    --optimize-autoloader \
+    --no-interaction \
+    --prefer-dist \
+    --ignore-platform-reqs
 
 # Build front-end assets in a separate stage
 FROM node:20-alpine AS node-build
