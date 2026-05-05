@@ -1,4 +1,6 @@
-# Build PHP application with Composer and node assets
+# ======================
+# Base PHP Image
+# ======================
 FROM php:8.2-fpm AS base
 
 RUN apt-get update && apt-get install -y \
@@ -18,41 +20,62 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /var/www/html
 
-# Install Composer dependencies in a separate stage
+
+# ======================
+# Composer Stage
+# ======================
 FROM composer:2 AS composer
+
 WORKDIR /app
+
 COPY composer.json composer.lock ./
+
 RUN composer install \
     --no-dev \
     --no-scripts \
-    --optimize-autoloader \
     --no-interaction \
     --prefer-dist \
     --ignore-platform-reqs
 
-# Build front-end assets in a separate stage
+
+# ======================
+# Node Build Stage
+# ======================
 FROM node:20-alpine AS node-build
+
 WORKDIR /app
+
 COPY package.json package-lock.json ./
 RUN npm ci
+
 COPY . .
 RUN npm run build
 
-# Final runtime image
+
+# ======================
+# Final Image
+# ======================
 FROM base
 
-RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y nginx \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
+
+# Copy dependencies & build assets
 COPY --from=composer /app/vendor ./vendor
 COPY --from=node-build /app/public/build ./public/build
-COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Copy app
 COPY . .
 
-RUN if [ ! -f .env ]; then cp .env.example .env; fi \
-    && php artisan key:generate --force \
-    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+# Nginx config
+COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
+RUN chmod +x /usr/local/bin/entrypoint.sh \
     && mkdir -p /run/nginx
 
 EXPOSE 80
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'" ]
