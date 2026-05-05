@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Analisis Clustering</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <nav class="bg-blue-600 p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-white text-xl font-bold">📊 Hasil Analisis K-Means</h1>
+            <a href="/" class="text-white text-sm bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded transition">← Kembali ke Data</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8 border border-gray-200">
+            <h2 class="text-lg font-bold text-gray-700 mb-4 border-b pb-2">🧮 Detail Perhitungan Algoritma</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-xs text-gray-500 uppercase font-bold">Total Data Rapat</p>
+                    <p class="text-2xl font-bold text-blue-600">{{ stats.total_rapat }}</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-xs text-gray-500 uppercase font-bold">Inertia (Error Rate)</p>
+                    <p class="text-2xl font-bold text-red-500">{{ stats.inertia }}</p>
+                    <p class="text-xs text-gray-400">Semakin kecil, semakin rapat cluster</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-xs text-gray-500 uppercase font-bold">Jumlah Iterasi</p>
+                    <p class="text-2xl font-bold text-purple-600">{{ stats.iterations }}</p>
+                    <p class="text-xs text-gray-400">Perulangan hingga konvergen</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="text-xs text-gray-500 uppercase font-bold">Nilai Centroid (Pusat)</p>
+                    <p class="text-sm font-mono text-gray-700 mt-1">
+                        {% for c in stats.centroids %}
+                            [{{ c }}] 
+                        {% endfor %}
+                    </p>
+                    <p class="text-xs text-gray-400">Rata-rata kehadiran per grup</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-bold text-gray-700">👥 Klasifikasi Keaktifan Anggota</h2>
+                </div>
+                <div class="p-6">
+                    <div class="overflow-x-auto h-96 overflow-y-auto">
+                        <table class="w-full text-left">
+                            <thead class="sticky top-0 bg-white">
+                                <tr class="text-gray-500 border-b">
+                                    <th class="py-2 px-4 text-sm">Nama</th>
+                                    <th class="py-2 px-4 text-sm">Jml Hadir</th>
+                                    <th class="py-2 px-4 text-sm">Kategori</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for m in members %}
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="py-3 px-4 font-medium">{{ m.Nama }}</td>
+                                    <td class="py-3 px-4">{{ m.Hadir }}</td>
+                                    <td class="py-3 px-4">
+                                        {% if m.Kategori == 'Sering Hadir' %}
+                                            <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Sering</span>
+                                        {% elif m.Kategori == 'Cukup Sering' %}
+                                            <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs font-bold">Cukup</span>
+                                        {% else %}
+                                            <span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">Jarang</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-bold text-gray-700">📅 Rekomendasi Waktu Kosong</h2>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-500 mb-4 text-sm">Waktu berikut aman dijadwalkan (Tidak ditemukan dalam 39 data rapat saat ini):</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {% for slot in empty_slots %}
+                        <div class="flex flex-col items-center justify-center p-3 rounded bg-blue-50 border border-blue-100 hover:bg-blue-100 transition">
+                            <span class="text-xs text-gray-500 uppercase font-bold">{{ slot.hari }}</span>
+                            <span class="text-lg font-bold text-blue-700">{{ slot.jam }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if not empty_slots %}
+                        <div class="p-4 bg-red-50 text-red-600 rounded text-center">Tidak ada waktu kosong tersisa! Jadwal padat.</div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,74 +1,74 @@
-@extends('layout.app')
-@section('title', 'Dashboard')
-@section('content')
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
-                <div class="bg-white p-5 rounded-xl shadow-md flex items-center space-x-4">
-                    <div class="bg-[#E5F2F1] text-[#4C8C86] p-3 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    @extends('layout.app')
+    @section('title', 'Dashboard')
+    @section('content')
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white p-5 rounded-xl shadow-md flex items-center space-x-4">
+                        <div class="bg-[#E5F2F1] text-[#4C8C86] p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-sm">Rapat Bulan Ini</p>
+                        <p class="text-2xl font-bold text-slate-800">{{ $countRapatMonth }}</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-md flex items-center space-x-4">
+                        <div class="bg-green-100 text-green-500 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-sm">Tugas Belum Selesai</p>
+                            <p class="text-2xl font-bold text-slate-800">{{ $countTugasUnfinished }}</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl shadow-md flex items-center space-x-4">
+                        <div class="bg-amber-100 text-amber-500 p-3 rounded-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-sm">Notulensi Tertunda</p>
+                            <p class="text-2xl font-bold text-slate-800">2</p>
+                        </div>
+                    </div>
+                    <button id="buatRapatBtn" class="bg-[#E5F2F1] border-2 border-dashed border-[#A3D1CD] p-5 rounded-xl shadow-sm flex items-center justify-center space-x-3 hover:bg-[#D4E9E7] hover:border-[#73B4AD] transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#4C8C86]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
-                    </div>
-                    <div>
-                        <p class="text-slate-500 text-sm">Rapat Bulan Ini</p>
-                        <p class="text-2xl font-bold text-slate-800">8</p>
-                    </div>
+                        <p class="text-[#4C8C86] font-semibold">Buat Rapat Baru</p>
+                    </button>
                 </div>
-                <div class="bg-white p-5 rounded-xl shadow-md flex items-center space-x-4">
-                    <div class="bg-green-100 text-green-500 p-3 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-slate-500 text-sm">Acara Minggu Ini</p>
-                        <p class="text-2xl font-bold text-slate-800">4</p>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-xl shadow-md flex items-center space-x-4">
-                    <div class="bg-amber-100 text-amber-500 p-3 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-slate-500 text-sm">Notulensi Tertunda</p>
-                        <p class="text-2xl font-bold text-slate-800">2</p>
-                    </div>
-                </div>
-                <button id="buatRapatBtn" class="bg-[#E5F2F1] border-2 border-dashed border-[#A3D1CD] p-5 rounded-xl shadow-sm flex items-center justify-center space-x-3 hover:bg-[#D4E9E7] hover:border-[#73B4AD] transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#4C8C86]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    <p class="text-[#4C8C86] font-semibold">Buat Rapat Baru</p>
-                </button>
-            </div>
 
-            <div class="grid grid-cols-1">
-                <div class="bg-white rounded-xl shadow-md p-4 sm:p-6">
-                    <div>
-                        <h3 class="text-lg font-semibold text-slate-800 mb-2">Kalender</h3>
-                        <div id="calendar" class="text-xs"></div>
-                    </div>
-                    <hr class="my-6 border-slate-200">
-                    <div>
-                        <div id="event-list-header" class="mb-4 flex flex-wrap items-center justify-between gap-y-2">
-                            <div>
-                                <h3 id="event-list-title" class="text-lg font-semibold text-slate-800">Acara Terdekat</h3>
-                                <p id="event-list-subtitle" class="text-sm text-slate-500"></p>
-                            </div>
-                            <div id="event-filter-buttons" class="flex items-center rounded-lg bg-slate-100 p-1">
-                                <button class="event-filter-btn" data-filter="today">Hari Ini</button>
-                                <button class="event-filter-btn" data-filter="3days">3 Hari</button>
-                                <button class="event-filter-btn active" data-filter="7days">7 Hari</button>
-                            </div>
-                            <button id="back-to-upcoming" class="hidden text-sm font-semibold text-[#4C8C86] hover:text-[#2E5350]">&larr; Kembali</button>
+                <div class="grid grid-cols-1">
+                    <div class="bg-white rounded-xl shadow-md p-4 sm:p-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-slate-800 mb-2">Kalender</h3>
+                            <div id="calendar" class="text-xs"></div>
                         </div>
-                        <div id="event-list-container" class="space-y-3">
+                        <hr class="my-6 border-slate-200">
+                        <div>
+                            <div id="event-list-header" class="mb-4 flex flex-wrap items-center justify-between gap-y-2">
+                                <div>
+                                    <h3 id="event-list-title" class="text-lg font-semibold text-slate-800">Acara Terdekat</h3>
+                                    <p id="event-list-subtitle" class="text-sm text-slate-500"></p>
+                                </div>
+                                <div id="event-filter-buttons" class="flex items-center rounded-lg bg-slate-100 p-1">
+                                    <button class="event-filter-btn" data-filter="today">Hari Ini</button>
+                                    <button class="event-filter-btn" data-filter="3days">3 Hari</button>
+                                    <button class="event-filter-btn active" data-filter="7days">7 Hari</button>
+                                </div>
+                                <button id="back-to-upcoming" class="hidden text-sm font-semibold text-[#4C8C86] hover:text-[#2E5350]">&larr; Kembali</button>
+                            </div>
+                            <div id="event-list-container" class="space-y-3">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-    </div>
+        </div>
 
 
 <div id="newMeetModal" class="hidden fixed inset-0 bg-gray-800/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300">
@@ -107,6 +107,27 @@
                             <input type="time" id="jam" name="jam" class="mt-1 block w-full border-slate-300 rounded-md shadow-sm focus:outline-none" required>
                         </div>
                     </div>
+                    <!-- ================= DSS REKOMENDASI ================= -->
+<div id="dss-box"
+     class="hidden rounded-lg border border-dashed border-[#A3D1CD] bg-[#E5F2F1] p-4">
+
+    <p class="text-sm font-semibold text-[#2E5350] mb-1">
+        Rekomendasi Jadwal Rapat
+    </p>
+
+    <p class="text-sm text-slate-700">
+        📅 <span id="dss-tanggal">-</span><br>
+        🕒 <span id="dss-jam">-</span>
+    </p>
+
+    <p id="dss-alasan" class="mt-1 text-xs text-slate-500"></p>
+
+    <button type="button"
+            id="dss-apply"
+            class="mt-2 text-sm font-semibold text-[#4C8C86] hover:text-[#2E5350]">
+        Gunakan Rekomendasi
+    </button>
+</div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700">Undang via Email / Kelompok</label>
                         <div class="relative mt-1">
@@ -179,3 +200,45 @@ const memberGroups = {
     @endforeach
 };
 </script>
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    async function loadDssGlobal() {
+        try {
+            const response = await fetch('{{ route("rapat.rekomendasi.global") }}', {
+                headers: { 'Accept': 'application/json' }
+            });
+
+            const data = await response.json();
+            console.log('DSS GLOBAL:', data);
+
+            if (!data.success) return;
+
+            document.getElementById('dss-tanggal').textContent = data.rekomendasi.tanggal;
+            document.getElementById('dss-jam').textContent = data.rekomendasi.jam;
+            document.getElementById('dss-alasan').textContent = data.rekomendasi.alasan;
+
+            document.getElementById('dss-box').classList.remove('hidden');
+
+            document.getElementById('dss-apply').onclick = function () {
+                document.getElementById('tanggal').value = data.rekomendasi.tanggal;
+                document.getElementById('jam').value = data.rekomendasi.jam;
+            };
+
+        } catch (error) {
+            console.error(  error);
+        }
+    }
+
+    // Klik tombol "Buat Rapat Baru"
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('#buatRapatBtn')) {
+            loadDssGlobal();
+        }
+    });
+
+});
+</script>
+@endpush
+

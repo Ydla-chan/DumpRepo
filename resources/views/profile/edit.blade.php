@@ -3,30 +3,8 @@
 @section('title', 'Edit Profil - MeetLog')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <nav class="flex mb-5" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-3">
-            <li class="inline-flex items-center">
-                <a href="{{ route('dashboard') }}" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-[#4C8C86]">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
-                    Dashboard
-                </a>
-            </li>
-            <li>
-                <div class="flex items-center">
-                    <svg class="w-6 h-6 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                    <a href="{{ route('profile.show') }}" class="ml-1 text-sm font-medium text-slate-500 hover:text-[#4C8C86] md:ml-2">Profil Saya</a>
-                </div>
-            </li>
-            <li aria-current="page">
-                <div class="flex items-center">
-                    <svg class="w-6 h-6 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                    <span class="ml-1 text-sm font-medium text-slate-800 md:ml-2">Edit</span>
-                </div>
-            </li>
-        </ol>
-    </nav>
+
 
     @if ($errors->any())
         <div x-data="{ show: true }" x-show="show" class="mb-6 p-4 rounded-lg bg-red-50 border border-red-200 flex justify-between items-start">
@@ -145,29 +123,12 @@
                         </div>
                     </div>
 
-                    <div class="mb-8">
-                        <div class="flex items-center gap-3 mb-5 pb-3 border-b border-slate-50">
-                            <div class="p-2 bg-amber-50 text-amber-600 rounded-lg">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                            </div>
-                            <h3 class="text-lg font-bold text-slate-900">Bio</h3>
-                        </div>
-
-                        <div>
-                            <label for="bio" class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Tentang Saya</label>
-                            <textarea id="bio" name="bio" rows="4" 
-                                class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#4C8C86] focus:border-transparent outline-none transition text-slate-800 placeholder-slate-400 resize-none"
-                                placeholder="Tuliskan sedikit tentang diri Anda, peran di perusahaan, atau keahlian...">{{ old('bio', $user->bio) }}</textarea>
-                             <p class="text-xs text-slate-400 mt-2 text-right">Maksimal 250 karakter</p>
-                        </div>
-                    </div>
 
                     <div class="flex items-center justify-end gap-4 pt-6 border-t border-slate-100">
                         <a href="{{ route('profile.show') }}" class="px-6 py-2.5 rounded-xl border border-slate-300 text-slate-600 font-medium hover:bg-slate-50 transition">
                             Batal
                         </a>
                         <button type="submit" class="px-6 py-2.5 bg-[#4C8C86] hover:bg-[#3D706B] text-white rounded-xl font-medium shadow-sm shadow-teal-200 transition flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                             Simpan Perubahan
                         </button>
                     </div>

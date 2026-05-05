@@ -1,0 +1,39 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: meetlog-app
+    container_name: meetlog-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 'true'
+      LOG_CHANNEL: stack
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: meetlog
+      DB_USERNAME: meetlog
+      DB_PASSWORD: secret
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: meetlog-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: meetlog
+      MYSQL_USER: meetlog
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

@@ -63,6 +63,12 @@ class BacklogController extends Controller
         if ($tindakan->pic_id !== Auth::id()) {
             return response()->json(['success' => false, 'message' => 'Aksi tidak diizinkan. Anda bukan PIC dari tugas ini.'], 403);
         }
+             if ($tindakan->status === 'done' && $newStatus !== 'done') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tindakan yang sudah selesai tidak bisa diubah kembali.'
+            ], 403);
+        }
 
         // 2. Validasi
         $validated = $request->validate([

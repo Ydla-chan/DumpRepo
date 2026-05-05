@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,19 +38,7 @@
     <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
         <h2 class="text-2xl font-bold text-center mb-6">Verifikasi OTP</h2>
 
-        {{-- Flash Success Message --}}
-        @if(session('success'))
-            <div class="bg-green-100 text-green-700 p-3 rounded-lg mb-4 text-center">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        {{-- Flash Error Message --}}
-        @if($errors->any())
-            <div class="bg-red-100 text-red-700 p-3 rounded-lg mb-4 text-center">
-                {{ $errors->first() }}
-            </div>
-        @endif
+        {{-- flash handled by SweetAlert --}}
 
         <form method="POST" action="{{ $action }}" class="space-y-4">
             @csrf
@@ -73,6 +61,7 @@
         <div class="text-center mt-4">
             <form method="POST" action="{{ url()->current() }}">
                 @csrf
+                <input type="hidden" name="email" value="{{ $email }}">
                 <button type="submit" name="resend" value="1"
                     class="text-blue-600 hover:underline text-sm">
                     Kirim Ulang OTP
@@ -80,5 +69,6 @@
             </form>
         </div>
     </div>
+    @include('partials.sweetalert')
 </body>
 </html>

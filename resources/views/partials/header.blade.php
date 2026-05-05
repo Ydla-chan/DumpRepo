@@ -8,25 +8,25 @@
                 </button>
             </div>
             <div class="flex items-center space-x-6">
-                <button class="relative text-slate-500 hover:text-slate-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                    <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center text-xs font-bold text-white bg-red-500 rounded-full">3</span>
-                </button>
+               
                 <div class="relative">
-                    <button id="profileBtn" class="flex items-center space-x-2">
-                        <img 
-            src="{{ Auth::user()->profile_photo 
-                    ? asset('storage/' . Auth::user()->profile_photo) 
-                    : asset('img/default-avatar.png') }}"
+                 <button id="profileBtn" class="flex items-center space-x-2">
+    @if(Auth::user()->profile_photo)
+        <img 
+            src="{{ asset('storage/' . Auth::user()->profile_photo) }}"
             alt="Profile"
             class="w-9 h-9 rounded-full ring-2 ring-offset-2 ring-[#A3D1CD]"
         >
-        <span class="font-medium hidden sm:inline text-slate-700">
-            {{ Auth::user()->name }}
-        </span> 
-                    </button>
+    @else
+        <div class="w-9 h-9 flex items-center justify-center rounded-full ring-2 ring-offset-2 ring-[#A3D1CD] bg-[#A3D1CD] text-slate-700 font-semibold">
+            {{ strtoupper(collect(explode(' ', Auth::user()->name))->map(fn($n) => $n[0])->join('')) }}
+        </div>
+    @endif
+
+    <span class="font-medium hidden sm:inline text-slate-700">
+        {{ Auth::user()->name }}
+    </span>
+</button>
                     <div id="profileMenu" class="hidden absolute right-0 mt-3 w-48 bg-white shadow-xl rounded-lg overflow-hidden z-50 border border-slate-100">
   <a href={{ route('profile.show') }} class="block px-4 py-2 text-sm  border border-slate-100 text-slate-700 hover:bg-slate-100">
     Ubah Data Diri

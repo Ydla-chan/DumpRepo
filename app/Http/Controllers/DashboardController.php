@@ -7,33 +7,55 @@ use App\Models\Rapat;
 use Illuminate\Support\Carbon;
 use App\Models\Group;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     /**
      * Menyediakan data rapat dalam format JSON untuk FullCalendar.
      */
-    public function index()
-    {
-        $groups = Group::with('users:id,name,email,group_id')->get();
-        // 1. Ambil data rapat dari database dengan kolom yang lebih lengkap
-        $rapats = Rapat::select('id', 'judul', 'tanggal', 'jam','tipe_lokasi', 'undangan')->get();
+  
 
-        // 2. Format data agar sesuai dengan yang dibutuhkan FullCalendar
-        $events = $rapats->map(function ($rapat) {
-            // Gabungkan tanggal dan jam, lalu format ke standar ISO8601
-            $startDateTime = Carbon::parse($rapat->tanggal->format('Y-m-d') . ' ' . $rapat->jam);
+public function index()
+{
+    $groups = Group::with('users:id,name,email,group_id')->get();
 
-            return [
-                'id'        => $rapat->id,
-                'title'     => $rapat->judul,
-                'start'     => $startDateTime->toIso8601String(),
-                'location'  => $rapat->tipe_lokasi === 'online' ? $rapat->link : $rapat->ruangan,
+    $emailUser = Auth::user()->email;
+    $now = Carbon::now();
 
-            ];
-        });
+       // ✅ Ambil rapat yang dia buat ATAU rapat yang dia diundang
+    $rapatsUser = Rapat::with('notulen')
+        ->where('pembuat_id', Auth::id())
+        ->orWhereJsonContains('undangan', $emailUser)
+        ->get();
 
-        // 3. Kembalikan view 'test' dan kirim data events yang sudah di-format.
-        return view('global.dashboard', ['events' => $events , 'groups' => $groups]);
-    }
+    // Hitung "Rapat Bulan Ini"
+    $countRapatMonth = $rapatsUser->filter(function ($r) use ($now) {
+        return $r->tanggal->isSameMonth($now);
+    })->count();
+
+    $allTindakans = Auth::user()->tindakans()->get();
+    // Hitung tugas yang belum selesai (unfinished)
+    $countTugasUnfinished = $allTindakans->where('status', '!=', 'done')->count();
+
+    $events = $rapatsUser->map(function ($rapat) {
+        $startDateTime = Carbon::parse($rapat->tanggal->format('Y-m-d') . ' ' . $rapat->jam);
+        $location = $rapat->tipe_lokasi === 'online' ? $rapat->link : $rapat->ruangan;
+
+        return [
+            'id'        => $rapat->id,
+            'title'     => $rapat->judul,
+            'start'     => $startDateTime->toIso8601String(),
+            'location'  => $location ?? '-',
+        ];
+    });
+
+    return view('global.dashboard', [
+        'events'             => $events,
+        'groups'             => $groups,
+        'countRapatMonth'    => $countRapatMonth,
+        'countTugasUnfinished'=> $countTugasUnfinished,
+      
+    ]);
+}
 }

@@ -27,12 +27,7 @@
         </a>
     </header>
 
-    {{-- Pesan Success (Placeholder) --}}
-    @if(session('success'))
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg shadow-sm" role="alert">
-            <p>{{ session('success') }}</p>
-        </div>
-    @endif
+    {{-- flash handled by SweetAlert --}}
     
     @php
         // DATA DUMMY UNTUK DEMONSTRASI TAMPILAN
@@ -91,7 +86,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 {{-- Placeholder Aksi --}}
                                 <a href="#" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                <button type="button" class="text-red-600 hover:text-red-900" onclick="alert('Hapus Logbook ID: {{ $logbook->id }}')">Hapus</button>
+                                <button type="button" class="text-red-600 hover:text-red-900" onclick="Swal.fire({icon: 'warning', title: 'Hapus', text: 'Hapus Logbook ID: {{ $logbook->id }}'})">Hapus</button>
                             </td>
                         </tr>
                     @empty

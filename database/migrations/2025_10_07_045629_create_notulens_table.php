@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('judul');
             $table->date('tanggal');
             $table->foreignId('pembuat_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
     }

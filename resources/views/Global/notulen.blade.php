@@ -32,10 +32,10 @@
 
 @section('content')
 {{-- We add a light background to the main container to make white cards stand out --}}
-<div class="flex flex-col md:flex-row flex-1 overflow-hidden bg-slate-50">
+<div class="flex flex-col md:flex-row flex-1 overflow-hidden bg-slate-50 min-h-screen">
 
     {{-- SIDEBAR DETAIL RAPAT --}}
-    <aside class="w-full md:w-1/3 lg:w-1/4 bg-white p-6 border-b md:border-r border-slate-200 overflow-y-auto custom-scrollbar">
+    <aside class="w-full md:w-1/3 lg:w-1/4 bg-white p-6 border-b md:border-r border-slate-200 overflow-y-auto custom-scrollbar md:sticky md:top-0 md:h-screen md:self-start">
         <h2 class="text-xl font-bold text-slate-900 pb-4 border-b border-slate-200">Detail Rapat</h2>
 
         <div class="mt-6 space-y-4">
@@ -64,24 +64,80 @@
             </div>
         </div>
 
+        {{-- Kehadiran: jumlah & bar chart --}}
+        @php
+            $presentCount = isset($hadirUsers) ? $hadirUsers->count() : ($rapat->attendances ? $rapat->attendances->count() : 0);
+            $totalInvited = isset($semuaPeserta) ? $semuaPeserta->count() : (is_array($rapat->undangan) ? count($rapat->undangan) : 0);
+            // include pembuat if not already in undangan
+            if($rapat->pembuat && isset($semuaPeserta) && !$semuaPeserta->contains($rapat->pembuat->email)) {
+                $totalInvited = $totalInvited + 1;
+            }
+            $presentPct = $totalInvited ? round($presentCount / $totalInvited * 100) : 0;
+            $absentCount = $totalInvited ? max(0, $totalInvited - $presentCount) : 0;
+        @endphp
+        <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+            <div class="flex items-start justify-between">
+                <div>
+                    <div class="text-sm text-slate-600">Kehadiran</div>
+                    <div class="text-xs text-slate-500">Daftar peserta yang sudah melakukan scan</div>
+                </div>
+                <div class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full">{{ $presentCount }}/{{ $totalInvited }} Hadir</div>
+            </div>
+
+            <div class="mt-3">
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
+                    <div class="bg-emerald-500 h-3" style="width: {{ $presentPct }}%"></div>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-500 mt-2">
+                    <div>{{ $presentPct }}% hadir</div>
+                    <div>{{ $absentCount }} absen</div>
+                </div>
+            </div>
+
+            <ul class="mt-3 space-y-2">
+                @if(isset($hadirUsers) && $hadirUsers->count() > 0)
+                    @foreach($hadirUsers as $u)
+                        @if($u)
+                        <li class="flex items-center gap-3 bg-white p-2 rounded-lg border border-slate-100">
+                            <div class="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-700">{{ strtoupper(substr($u->name ?? 'U', 0, 1)) }}</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-slate-800">{{ $u->name }}</div>
+                                <div class="text-xs text-slate-500">{{ $u->email }}</div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8.414 15l-4.121-4.121a1 1 0 111.414-1.414L8.414 12.172l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        </li>
+                        @endif
+                    @endforeach
+                @else
+                    <li class="text-sm text-slate-500 italic">Belum ada yang melakukan absensi.</li>
+                @endif
+            </ul>
+        </div>
+
         {{-- Tombol Export & Simpan --}}
         <div class="mt-8 pt-6 border-t border-slate-200 space-y-3">
-            <button class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-100 hover:border-slate-400 transition-all font-semibold">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                Export ke PDF
-            </button>
+       
+                @php $isPublished = isset($notulen) && $notulen->is_published; @endphp
+                @if(!$isPublished)
+                <form action="{{ route('notulen.store') }}" method="POST" id="saveNotulenForm">
+                    @csrf
+                    <input type="hidden" name="rapat_id" value="{{ $rapat->id }}">
+                    <input type="hidden" name="judul" value="{{ $rapat->judul }}">
+                    <input type="hidden" name="tanggal" value="{{ $rapat->tanggal }}">
+                    <input type="hidden" name="pembuat_id" value="{{ auth()->id() }}">
+                    <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all font-semibold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                        Simpan Notulen (Draft)
+                    </button>
+                </form>
+                @else
+                    <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-700 font-semibold text-center">Notulen sudah dipublish — tidak bisa diedit.</div>
+                @endif
 
-            <form action="{{ route('notulen.store') }}" method="POST" id="saveNotulenForm">
-                @csrf
-                <input type="hidden" name="rapat_id" value="{{ $rapat->id }}">
-                <input type="hidden" name="judul" value="{{ $rapat->judul }}">
-                <input type="hidden" name="tanggal" value="{{ $rapat->tanggal }}">
-                <input type="hidden" name="pembuat_id" value="{{ auth()->id() }}">
-                <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
-                    Simpan Notulen
-                </button>
-            </form>
+                {{-- Publish button (owner only, only when not published and notulen exists) --}}
+                @if(isset($notulen) && !$notulen->is_published && isset($isOwner) && $isOwner)
+                    <button id="publishBtn" class="w-full mt-3 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-semibold">Publish Notulen</button>
+                @endif
         </div>
     </aside>
 
@@ -101,7 +157,20 @@
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-5">
                 {{-- Header Pokok Bahasan --}}
                 <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-3 border-b border-slate-200 pb-4">
-                    <h3 class="text-xl font-bold text-slate-800">{{ $b->judul }}</h3>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-slate-800">{{ $b->judul }}</h3>
+                        @php
+                            $totalTindakan = $b->keputusans->sum(function($k){ return $k->tindakans->count(); });
+                            $doneTindakan = $b->keputusans->sum(function($k){ return $k->tindakans->where('status','done')->count(); });
+                            $pct = $totalTindakan ? round($doneTindakan / $totalTindakan * 100) : 0;
+                        @endphp
+                        <div class="mt-2 w-full sm:w-64">
+                            <div class="text-xs text-slate-600 mb-1">Progress: {{ $doneTindakan }} / {{ $totalTindakan }} selesai ({{ $pct }}%)</div>
+                            <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200">
+                                <div class="bg-emerald-500 h-2.5" style="width: {{ $pct }}%"></div>
+                            </div>
+                        </div>
+                    </div>
            {{-- Aksi --}}
     <div class="flex gap-3 flex-wrap"> {{-- Tambahkan flex-wrap untuk responsivitas --}}
         <button class="delete-item-btn flex items-center gap-1 text-sm font-semibold bg-red-100 text-red-700 px-3 py-1.5 rounded-md hover:bg-red-200 transition-all whitespace-nowrap"
@@ -264,7 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             return [
                                 'deskripsi' => $t->deskripsi,
                                 'pic_id' => $t->pic_id,
-                                'deadline' => $t->deadline
+                                'deadline' => $t->deadline,
+                                'status' => $t->status
                             ];
                         })->toArray()
                     ];
@@ -272,6 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ];
         })) !!}
     };
+    // Flag apakah notulen sudah dipublish (agar UI non-editable)
+    const isPublished = {{ (isset($notulen) && $notulen->is_published) ? 'true' : 'false' }};
     
     // Konversi array JSON string kembali ke objek JavaScript
     if (typeof draftData.pokok_bahasan === 'string') {
@@ -299,6 +371,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function attachEventListeners() {
         // Re-attach modal listeners
         document.querySelectorAll('.open-modal-btn').forEach(btn => {
+            if (isPublished) {
+                btn.classList.add('opacity-60', 'pointer-events-none');
+                btn.title = 'Notulen sudah dipublish';
+                return;
+            }
             btn.onclick = (e) => {
                 e.preventDefault();
                 const title = btn.title;
@@ -336,6 +413,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Attach delete listeners
         document.querySelectorAll('.delete-item-btn').forEach(btn => {
+            if (isPublished) {
+                btn.classList.add('opacity-60', 'pointer-events-none');
+                btn.title = 'Notulen sudah dipublish';
+                return;
+            }
             btn.onclick = (e) => {
                 e.preventDefault();
                 const type = btn.dataset.type;
@@ -444,10 +526,36 @@ document.addEventListener('DOMContentLoaded', () => {
                     keputusanHtml = `<p class="text-sm text-slate-500 italic pl-2">Belum ada keputusan yang ditambahkan.</p>`;
                 }
 
+                // compute progress for this pokok bahasan
+                let totalCount = 0;
+                let doneCount = 0;
+                if (b.keputusan && b.keputusan.length > 0) {
+                    b.keputusan.forEach(kItem => {
+                        if (kItem.tindakan && kItem.tindakan.length > 0) {
+                            kItem.tindakan.forEach(tItem => {
+                                totalCount++;
+                                if (tItem.status === 'done') doneCount++;
+                            });
+                        }
+                    });
+                }
+                const pct = totalCount ? Math.round((doneCount/totalCount)*100) : 0;
+                const progressHtml = `
+                    <div class="mt-3 sm:mt-0 sm:ml-4 w-full sm:w-64">
+                        <div class="text-xs text-slate-600 mb-1">Progress: ${doneCount} / ${totalCount} selesai (${pct}%)</div>
+                        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200">
+                            <div class="bg-emerald-500 h-2.5" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+
                 htmlContent += `
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-5">
                         <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-3 border-b border-slate-200 pb-4">
-                            <h3 class="text-xl font-bold text-slate-800">${b.judul}</h3>
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-slate-800">${b.judul}</h3>
+                                ${progressHtml}
+                            </div>
                             <div class="flex gap-3 flex-wrap">
                                 <button class="delete-item-btn flex items-center gap-1 text-sm font-semibold bg-red-100 text-red-700 px-3 py-1.5 rounded-md hover:bg-red-200 transition-all whitespace-nowrap"
                                         title="Hapus Pokok Bahasan" data-type="pokok" data-id="${pIndex}">
@@ -492,6 +600,37 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.addEventListener('click', (e) => {
         if(e.target === modal) closeModal();
     });
+
+    // Publish button handler
+    const publishBtn = document.getElementById('publishBtn');
+    if (publishBtn) {
+        publishBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (!confirm('Apakah Anda yakin ingin mempublish notulen ini? Setelah dipublish, tidak dapat diedit.')) return;
+            const notulenId = {{ isset($notulen) ? $notulen->id : 'null' }};
+            if (!notulenId) return alert('Notulen belum disimpan. Simpan dulu sebelum publish.');
+            try {
+                const res = await fetch("{{ url('notulen') }}" + '/' + notulenId + "/publish", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(data.message || 'Notulen berhasil dipublish');
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Gagal publish notulen');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Terjadi kesalahan saat publish');
+            }
+        });
+    }
 
     // Add to draft
     modalForm.addEventListener('submit', e => {
@@ -547,7 +686,8 @@ document.addEventListener('DOMContentLoaded', () => {
             draftData.pokok_bahasan[pIdx].keputusan[kIdx].tindakan.push({ 
                 deskripsi: inputTindakan.value, 
                 pic_id: parseInt(selectPic.value),
-                deadline: document.getElementById('deadlineTindakan').value
+                deadline: document.getElementById('deadlineTindakan').value,
+                status: 'pending'
             });
             console.log("✅ Tindakan ditambahkan:", inputTindakan.value);
         }

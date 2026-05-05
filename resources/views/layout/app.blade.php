@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="id" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
@@ -226,13 +226,24 @@
     </div> --}}
 
    {{-- Events dari controller --}}
-    @isset($events)
+    {{-- @isset($events)
         <script>const events = @json($events);</script>
     @endisset
 
     @vite('resources/js/layout.js')
     @vite('resources/js/support.js')
-    @stack('scripts')
+    @stack('scripts') --}}
+
+    @isset($events)
+    <script>const events = @json($events);</script>
+@endisset
+
+@include('partials.sweetalert')
+
+<script src="{{ asset('js/layout.js') }}"></script>
+<script src="{{ asset('js/support.js') }}"></script>
+
+@stack('scripts')
 
 </body>
 </html>

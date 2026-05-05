@@ -26,6 +26,12 @@ class AttendanceController extends Controller
             return view('attendance.index', ['error' => 'Rapat tidak ditemukan.']);
         }
 
+        // Validasi token/key untuk memastikan QR khusus rapat ini
+        $key = $request->query('key');
+        if (empty($key) || $key !== $rapat->attendance_token) {
+            return view('attendance.index', ['error' => 'Token QR tidak cocok atau tidak disertakan.']);
+        }
+
         return view('attendance.index', ['rapat' => $rapat]);
     }
 

@@ -88,7 +88,6 @@
                    <a href="#pricing" class="link-underline text-gray-600 font-medium hover:text-brand transition duration-300">Harga</a>
                    
                    <div class="flex items-center gap-4 pl-4">
-                     <a href="/login" class="text-gray-600 font-semibold hover:text-brand transition">Masuk</a>
                      <a href="/register" class="px-6 py-2.5 bg-brand text-white rounded-lg shadow hover:bg-brand-dark hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 font-semibold">
                          Daftar Gratis
                      </a>

@@ -139,11 +139,11 @@ async function updateTaskStatus(taskId, newStatus, cardElement) {
                 location.reload();
             }
         } else {
-            alert('Gagal update status: ' + result.message);
+            if (typeof Swal !== 'undefined') Swal.fire({ icon: 'error', title: 'Gagal', text: result.message }); else alert('Gagal update status: ' + result.message);
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Terjadi kesalahan jaringan.');
+        if (typeof Swal !== 'undefined') Swal.fire({ icon: 'error', title: 'Kesalahan Jaringan', text: 'Terjadi kesalahan jaringan.' }); else alert('Terjadi kesalahan jaringan.');
     } finally {
         cardElement.style.opacity = '1';
     }

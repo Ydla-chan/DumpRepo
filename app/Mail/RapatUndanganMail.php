@@ -33,7 +33,7 @@ class RapatUndanganMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Undangan Rapat: ' . $this->rapat->agenda, // Subjek email dinamis
+            subject: 'Undangan Rapat: ' . $this->rapat->judul, // Subjek email dinamis
         );
     }
 

@@ -1,75 +1,146 @@
-    <aside id="sidebar" class="bg-white shadow-lg flex flex-col fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 z-50 transition-all duration-300 ease-in-out w-64">
-        <div class="p-4 border border-slate-100 flex items-center justify-between h-16 shrink-0">
-            <h1 id="sidebar-logo" class="text-2xl font-bold text-[#4C8C86] transition-all">MeetLog</h1>
-            <button id="minimizeSidebarBtn" class="hidden md:block text-slate-500 hover:text-slate-800">
-                <svg id="minimize-btn-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-            <button id="closeSidebar" class="md:hidden text-slate-500 hover:text-slate-800">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-     <nav class="flex-1 p-4 space-y-2">
-    <!-- Dashboard -->
-    <a href="/dashboard"
-       class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
-       {{ Request::is('dashboard') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-        </svg>
-        <span class="nav-text">Dashboard</span>
-    </a>
-
-    <!-- Rekap Rapat -->
-    <a href="/rapatrekap"
-       class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
-       {{ Request::is('rapatrekap*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-        </svg>
-        <span class="nav-text">Rekap Rapat</span>
-    </a>
-
-    <!-- Rekap Notulensi -->
-    <a href="/notulen/select"
-       class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
-       {{ Request::is('viewnotuleen*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
-        </svg>
-        <span class="nav-text">Rekap Notulensi</span>
-    </a>
-
+<aside id="sidebar" class="bg-white border-r border-slate-100 flex flex-col fixed md:static inset-y-0 left-0 z-50 w-72 h-screen transition-transform duration-300 -translate-x-full md:translate-x-0 font-sans">
     
-    <!-- Rekap Notulensi -->
-    <a href="/backlogs"
-    class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
-    {{ Request::is('backlogs*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
-    </svg>
-    <span class="nav-text">Backlog</span>
-</a>
-{{-- Menu khusus admin --}}
-@if(Auth::check() && Auth::user()->role === 'admin')
-    <a href="/groups"
-       class="flex items-center space-x-3 p-2 rounded-lg transition-colors duration-200
-       {{ Request::is('groups*') ? 'bg-[#E5F2F1] text-[#4C8C86] font-semibold' : 'text-slate-600 hover:bg-[#E5F2F1] hover:text-[#3D706B]' }}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 
-                     2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 
-                     3.5V20h14v-3.5C15 14.17 10.33 13 8 13zm8 
-                     0c-.29 0-.62.02-.97.05 1.16.84 1.97 2.07 
-                     1.97 3.45V20h6v-3.5c0-2.33-4.67-3.5-7-3.5z"/>
-        </svg>
-        <span class="nav-text">User Management</span>
-    </a>
-@endif
-</nav>
+    {{-- 1. HEADER: BRANDING --}}
+    <div class="h-20 flex items-center px-8 border-b border-slate-50 shrink-0"> {{-- shrink-0 ditambahkan agar header tidak mengecil --}}
+        <div class="flex items-center gap-3">
+            {{-- Logo Icon --}}
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#4C8C86] to-[#2E5350] flex items-center justify-center text-white shadow-lg shadow-[#4C8C86]/30">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            {{-- Logo Text --}}
+            <div>
+                <h1 class="text-xl font-bold text-slate-800 tracking-tight leading-none">MeetLog</h1>
+            </div>
+        </div>
 
-    </aside>
+        {{-- Mobile Close Button --}}
+        <button id="closeSidebar" class="md:hidden ml-auto text-slate-400 hover:text-slate-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+    </div>
+
+    {{-- 2. NAVIGATION MENU --}}
+    {{-- PERUBAHAN DI SINI: ganti 'overflow-y-auto' menjadi 'overflow-hidden' --}}
+    <div class="flex-1 overflow-hidden py-6 px-3 space-y-8">
+        
+        {{-- Section: Main Menu --}}
+        <div>
+            <h3 class="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Main Menu</h3>
+            <div class="space-y-1">
+                {{-- Dashboard --}}
+                <a href="/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative
+                   {{ Request::is('dashboard') 
+                      ? 'bg-[#4C8C86] text-white shadow-md shadow-[#4C8C86]/25' 
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 {{ Request::is('dashboard') ? 'text-white' : 'text-slate-400 group-hover:text-[#4C8C86]' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    <span class="font-medium text-sm">Dashboard</span>
+                </a>
+
+                {{-- Rekap Rapat --}}
+                <a href="/rapatrekap" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative
+                   {{ Request::is('rapatrekap*') 
+                      ? 'bg-[#4C8C86] text-white shadow-md shadow-[#4C8C86]/25' 
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 {{ Request::is('rapatrekap*') ? 'text-white' : 'text-slate-400 group-hover:text-[#4C8C86]' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="font-medium text-sm">Jadwal Rapat</span>
+                </a>
+            </div>
+        </div>
+
+        {{-- Section: Management --}}
+        <div>
+            <h3 class="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Management</h3>
+            <div class="space-y-1">
+                {{-- Arsip Notulensi --}}
+                <a href="/notulen/select" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative
+                   {{ Request::is('viewnotuleen*') || Request::is('notulen*')
+                      ? 'bg-[#4C8C86] text-white shadow-md shadow-[#4C8C86]/25' 
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 {{ Request::is('viewnotuleen*') || Request::is('notulen*') ? 'text-white' : 'text-slate-400 group-hover:text-[#4C8C86]' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="font-medium text-sm">Arsip Notulensi</span>
+                </a>
+
+                {{-- Backlog (With Badge) --}}
+                <a href="/backlogs" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative
+                   {{ Request::is('backlogs*') 
+                      ? 'bg-[#4C8C86] text-white shadow-md shadow-[#4C8C86]/25' 
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 {{ Request::is('backlogs*') ? 'text-white' : 'text-slate-400 group-hover:text-[#4C8C86]' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    <span class="font-medium text-sm flex-1">Backlog Tugas</span>
+                    
+                 
+                </a>
+            </div>
+        </div>
+
+        {{-- Section: Admin --}}
+        @if(Auth::check() && Auth::user()->role === 'admin')
+        <div>
+            <h3 class="px-4 text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Administrator</h3>
+            <div class="space-y-1">
+                <a href="/groups" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative
+                   {{ Request::is('groups*') 
+                      ? 'bg-[#4C8C86] text-white shadow-md shadow-[#4C8C86]/25' 
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 {{ Request::is('groups*') ? 'text-white' : 'text-slate-400 group-hover:text-[#4C8C86]' }} transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <span class="font-medium text-sm">Kelola Users & Groups</span>
+                </a>
+            </div>
+        </div>
+        @endif
+
+    </div>
+
+    {{-- 3. PROFILE CARD (FLOATING AT BOTTOM) --}}
+    @if(Auth::check())
+    <div class="p-4 border-t border-slate-50 shrink-0"> {{-- shrink-0 ditambahkan agar profil tidak terjepit --}}
+        <div class="bg-slate-50 rounded-xl p-3 flex items-center gap-3 cursor-pointer hover:bg-slate-100 transition-colors border border-slate-100" onclick="document.getElementById('logout-form').submit();">
+            <div class="relative">
+                <div class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[#4C8C86] font-bold shadow-sm">
+                  @if(Auth::user()->profile_photo)
+        <img 
+            src="{{ asset('storage/' . Auth::user()->profile_photo) }}"
+            alt="Profile"
+            class="w-9 h-9 rounded-full ring-2 ring-offset-2 ring-[#A3D1CD]"
+        >
+    @else
+        <div class="w-9 h-9 flex items-center justify-center rounded-full ring-2 ring-offset-2 ring-[#A3D1CD] bg-[#A3D1CD] text-slate-700 font-semibold">
+            {{ strtoupper(collect(explode(' ', Auth::user()->name))->map(fn($n) => $n[0])->join('')) }}
+        </div>
+    @endif
+
+                </div>
+                {{-- Online Indicator --}}
+                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+            </div>
+            
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-slate-700 truncate">{{ Auth::user()->name }}</p>
+                <p class="text-xs text-slate-400 truncate">Tekan untuk keluar</p>
+            </div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-300 hover:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+        </div>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+    </div>
+    @endif
+</aside>

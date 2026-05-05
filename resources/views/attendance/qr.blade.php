@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layouts.app')
 
 @section('content')
 <div class="container mx-auto p-4">
@@ -10,7 +10,7 @@
         <img src="{{ url('/rapat/'.$rapat->id.'/qr-code') }}" alt="QR Absensi" style="width:260px; height:260px;" />
     </div>
 
-    <p class="text-sm text-gray-600">Atau buka tautan ini di ponsel: <a class="text-blue-600" href="{{ url('/absensi/scan/'.$rapat->id.'/'.$rapat->attendance_token) }}">{{ url('/absensi/scan/'.$rapat->id.'/'.$rapat->attendance_token) }}</a></p>
+    <p class="text-sm text-gray-600">Atau buka tautan ini di ponsel: <a class="text-blue-600" href="{{ url('/absensi/scan/auto?rapat_id=' . $rapat->id . '&key=' . $rapat->attendance_token) }}">{{ url('/absensi/scan/auto?rapat_id=' . $rapat->id . '&key=' . $rapat->attendance_token) }}</a></p>
 
     @auth
     <form method="POST" action="{{ route('rapat.attendance.token.regenerate', $rapat->id) }}" class="mt-4">

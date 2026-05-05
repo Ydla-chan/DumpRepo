@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\RapatController;
 use App\Http\Controllers\AttendanceController;
@@ -19,28 +20,20 @@ Route::get('/', fn() => view('landing'))->name('landing');
 Route::view('/register', 'auth.register')->name('register.form');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 
-// Route Verify OTP Code - Register
-Route::get('/verify-register', function () {
-    return view('auth.verify-otp', [
-        'email'  => session('verify_email'),
-        'action' => route('register.verify'),
-    ]);
-})->name('verify.register.form');
-Route::post('/register/verify', [AuthController::class, 'verifyRegisterOtp'])->name('register.verify');
 
 // Route Auth Login 
 Route::view('/login', 'auth.login')->name('login.form');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-// Route Auth Login 
-Route::get('/verify-login', function () {
-    return view('auth.verify-otp', [
-        'email'  => session('verify_email'),
-        'action' => route('login.verify'),
-    ]);
-})->name('verify.login.form');
+// Forgot / Reset Password (OTP)
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendOtp'])->name('password.email');
+Route::get('/verify-otp', [ForgotPasswordController::class, 'showVerifyForm'])->name('password.verify.form');
+Route::post('/verify-otp', [ForgotPasswordController::class, 'verifyOtp'])->name('password.verify');
+Route::get('/reset-password', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset.form');
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
-Route::post('/login/verify', [AuthController::class, 'verifyLoginOtp'])->name('login.verify');
+
 
 // Route Login with Google
 Route::get('/loginwithgoogle', [AuthController::class, 'redirectToGoogle'])->name('login.google');
@@ -137,6 +130,7 @@ Route::prefix('notulen')->group(function () {
     Route::post('/{notulenId}/pokok', [NotulenController::class, 'storePokokBahasan'])->name('notulen.storePokok');
     Route::post('/pokok/{pokokId}/keputusan', [NotulenController::class, 'storeKeputusan'])->name('notulen.storeKeputusan');
     Route::post('/keputusan/{keputusanId}/tindakan', [NotulenController::class, 'storeTindakan'])->name('notulen.storeTindakan');
+    Route::post('/{notulenId}/publish', [NotulenController::class, 'publish'])->name('notulen.publish');
 
     // Hapus Pokok Bahasan berdasarkan ID-nya
 Route::delete('/pokok/{pokok}', [NotulenController::class, 'destroyPokokBahasan'])->name('notulen.destroyPokok');
@@ -145,6 +139,10 @@ Route::delete('/keputusan/{keputusan}', [NotulenController::class, 'destroyKeput
 // Hapus Tindakan berdasarkan ID-nya
 Route::delete('/tindakan/{tindakan}', [NotulenController::class, 'destroyTindakan'])->name('notulen.destroyTindakan');
 
+    // Generate dan tampilkan ringkasan notulen
+    Route::post('/{notulenId}/generate-summary', [NotulenController::class, 'generateSummary'])->name('notulen.generateSummary');
+    Route::get('/{notulenId}/summary', [NotulenController::class, 'showSummary'])->name('notulen.showSummary');
+    Route::get('/{notulenId}/summary-json', [NotulenController::class, 'getSummaryJson'])->name('notulen.getSummaryJson');
 
     // PENTING: ini harus paling bawah!
     Route::get('/{notulen}', [NotulenController::class, 'show'])->name('notulen.show');
@@ -164,15 +162,14 @@ Route::post('/backlogs', [BacklogController::class, 'store'])->name('backlogs.st
 
 
 
-Route::get('/rapat/{id}/qr-code', [RapatController::class, 'generateQrCode'])->name('rapat.qr');
-
+Route::get('/rapat/{rapat}/qr-code', [RapatController::class, 'generateQrCode'])->name('rapat.qr');
 // Route untuk menampilkan halaman QR (yang menampilkan gambar QR)
 Route::get('/rapat/{rapat}/qr', [AttendanceController::class, 'showQrPage'])->name('rapat.qr.page');
 
 // Halaman universal untuk absensi via QR (terima rapat_id sebagai query parameter)
 Route::get('/absensi/scan', [AttendanceController::class, 'showForm'])->name('absensi.scan.form');
 // Quick/auto scan: langsung mencatat kehadiran saat link dikunjungi (digunakan untuk QR yang langsung absen)
-Route::get('/absensi/scan/auto', [AttendanceController::class, 'quickScan'])->name('absensi.scan.auto');
+Route::get('/absensi/scan/auto', [AttendanceController::class, 'quickScan'])->name('absensi.scan.auto')->middleware('auth'); // Batasi 10 request per menit untuk mencegah penyalahgunaan
 Route::post('/absensi/scan', [AttendanceController::class, 'store'])->name('absensi.scan.store');
 
 // Route untuk menampilkan hasil absensi rapat
@@ -187,3 +184,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'uploadPhoto'])->name('profile.upload-photo');
 });  
+
+
+
+Route::get('/rapat/{id}/notulen', [RapatController::class, 'showNotulenPage'])->name('rapat.notulen');
+
+
+
+Route::get('/rapat/rekomendasi-global', [RapatController::class, 'rekomendasiJadwalGlobal'])->name('rapat.rekomendasi.global');

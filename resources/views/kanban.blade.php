@@ -351,7 +351,7 @@ async function updateTaskStatus(taskId, newStatusCode, newStatusLabel, cardEleme
 
     } catch (error) {
         console.error('Error:', error);
-        alert(`Terjadi kesalahan: ${error.message}. Status dikembalikan.`);
+        if (typeof Swal !== 'undefined') Swal.fire({ icon: 'error', title: 'Kesalahan', text: `Terjadi kesalahan: ${error.message}. Status dikembalikan.` }); else alert(`Terjadi kesalahan: ${error.message}. Status dikembalikan.`);
         
         // Kembalikan status visual pada dropdown
         selectElement.value = oldStatusLabel;

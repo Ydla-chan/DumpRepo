@@ -34,18 +34,7 @@ s<!-- resources/views/dashboard.blade.php -->
             </div>
         </div>
 
-        <!-- Flash messages -->
-        @if(session('success'))
-            <div class="mb-4 p-3 rounded bg-green-50 border border-green-200 text-green-700">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if($errors->any())
-            <div class="mb-4 p-3 rounded bg-red-50 border border-red-200 text-red-700">
-                {{ $errors->first() }}
-            </div>
-        @endif
+        <!-- Flash messages handled by SweetAlert -->
 
         <!-- Main grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -123,5 +112,6 @@ s<!-- resources/views/dashboard.blade.php -->
             </ul>
         </div>
     </div>
+    @include('partials.sweetalert')
 </body>
 </html>

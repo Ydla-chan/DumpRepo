@@ -21,6 +21,8 @@ class Rapat extends Model
         'tipe_lokasi',
         'link',
         'ruangan',
+         'attendance_token',
+        'pembuat_id',
     ];
 
 
@@ -38,4 +40,10 @@ public function attendances()
 {
     return $this->hasMany(Attendance::class);
 }
+public function pembuat()
+{
+    return $this->belongsTo(User::class, 'pembuat_id');
+}
+
+
 }

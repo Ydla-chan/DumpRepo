@@ -25,7 +25,11 @@ class User extends Authenticatable
         'otp_expires_at',
         'is_verified',
         'group_id', 
-        'profile_photo'// ✅ tambahin ini
+        'profile_photo',
+        // ✅ tambahin ini
+        'phone',
+        'department',
+        'bio',
     ];
 
     /**

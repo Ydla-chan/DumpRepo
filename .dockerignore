@@ -1,0 +1,13 @@
+.git
+node_modules
+vendor
+.env
+.env.*
+storage/framework/cache/data
+storage/logs
+storage/app/public
+public/storage
+public/build
+storage/debugbar
+.DS_Store
+npm-debug.log

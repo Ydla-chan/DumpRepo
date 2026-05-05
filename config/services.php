@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY'),
+    ],
+
+    'ai_provider' => env('AI_PROVIDER', 'ollama'), // 'ollama' atau 'openai'
+
+    'ollama' => [
+        'endpoint' => env('OLLAMA_ENDPOINT', 'http://localhost:11434/api/generate'),
+        'model' => env('OLLAMA_MODEL', 'kimi'),
+    ],
+
 ];

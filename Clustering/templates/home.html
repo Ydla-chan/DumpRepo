@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Rapat Mentah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <nav class="bg-gray-800 p-4 shadow-lg">
+        <div class="container mx-auto">
+            <h1 class="text-white text-xl font-bold">📂 Data Source View</h1>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-2">Data Dummy Rapat</h2>
+            <p class="text-gray-500 mb-6">Berikut adalah data mentah (JSON) jadwal rapat yang tersedia. Klik tombol di bawah untuk memproses data ini menggunakan algoritma Clustering.</p>
+
+            <div class="overflow-x-auto h-96 overflow-y-auto border rounded-lg">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 sticky top-0">
+                        <tr>
+                            <th class="p-3 border-b font-semibold text-sm text-gray-600">ID Rapat</th>
+                            <th class="p-3 border-b font-semibold text-sm text-gray-600">Hari</th>
+                            <th class="p-3 border-b font-semibold text-sm text-gray-600">Jam</th>
+                            <th class="p-3 border-b font-semibold text-sm text-gray-600">Peserta</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        {% for row in raw_data %}
+                        <tr class="hover:bg-gray-50 text-sm">
+                            <td class="p-3 font-mono text-blue-600">{{ row.id_rapat }}</td>
+                            <td class="p-3">{{ row.hari }}</td>
+                            <td class="p-3">{{ row.jam }}</td>
+                            <td class="p-3 text-gray-500">{{ row.peserta }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <a href="/analyze" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform transition hover:scale-105 flex items-center">
+                    <span>⚡ Lakukan Clustering Data</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

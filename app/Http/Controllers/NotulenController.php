@@ -7,9 +7,11 @@ use App\Models\Notulen;
 use App\Models\Tindakan;
 use App\Models\Keputusan;
 use App\Models\PokokBahasan;
+use App\Services\NotulenSummaryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 
 class NotulenController extends Controller
@@ -17,21 +19,52 @@ class NotulenController extends Controller
     /**
      * Tampilkan daftar rapat untuk dipilih sebelum membuat notulen.
      */
-    public function selectRapat()
-    {
-        $rapats = Rapat::with('notulen')->get();
-        $notulens = Notulen::all();
+  public function selectRapat()
+{
+    $userId = Auth::id();
+    $emailUser = Auth::user()->email;
 
-        return view('global.notulenselection', compact('rapats', 'notulens'));
-    }
+    // 1️⃣ Rapat yang dibuat user login (owner)
+    $rapats = Rapat::with('notulen')
+        ->where('pembuat_id', $userId)
+        ->orderBy('tanggal', 'desc')
+        ->get();
 
+    // 2️⃣ Notulen yang dibuat user login sendiri
+    $notulenOwner = Notulen::with('rapat')
+        ->where('pembuat_id', $userId)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // 3️⃣ Notulen dari rapat yang user login diundang & sudah published
+    $notulenShared = Notulen::with('rapat')
+        ->whereHas('rapat', function ($q) use ($emailUser) {
+            $q->whereJsonContains('undangan', $emailUser);
+        })
+        ->where('is_published', 1)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    // 4️⃣ Gabungkan owner + shared (hapus duplicate)
+    $notulens = $notulenOwner->merge($notulenShared)->unique('id');
+
+    return view('global.notulenselection', compact('rapats', 'notulens'));
+}
     /**
      * Tampilkan form pembuatan notulen untuk rapat yang dipilih.
      */
     public function create(Request $request)
     {
         $rapatId = $request->get('rapat_id');
-        $rapat = Rapat::findOrFail($rapatId);
+        $rapat = Rapat::with('pembuat')->findOrFail($rapatId);
+
+        
+        $isOwner = $rapat->pembuat_id === Auth::id();
+
+        $hadirUsers = $rapat->attendances()->with('user')->get()->pluck('user');
+        $semuaPeserta = collect($rapat->undangan)
+            ->push($rapat->pembuat->email ?? null)
+            ->filter();
 
         // Cek apakah notulen untuk rapat ini sudah ada
         $notulen = Notulen::where('rapat_id', $rapatId)->first();
@@ -50,7 +83,7 @@ class NotulenController extends Controller
             }
         }
 
-        return view('global.notulen', compact('rapat', 'notulen', 'bahasan', 'keputusan', 'tindakan'));
+        return view('global.notulen', compact('rapat', 'notulen', 'bahasan', 'keputusan', 'tindakan', 'hadirUsers', 'semuaPeserta' , 'isOwner'));
     }
 
     /**
@@ -58,8 +91,10 @@ class NotulenController extends Controller
      */
     public function store(Request $request)
     {
+         $userId = Auth::id();
         Log::info('📩 Data diterima di NotulenController@store', $request->all());
 
+        
         try {
             $data = $request->json()->all();
             if (empty($data)) {
@@ -131,7 +166,7 @@ class NotulenController extends Controller
                                         'deskripsi' => $tindakan['deskripsi'],
                                         'pic_id'    => $tindakan['pic_id'],
                                         'deadline'  => $tindakan['deadline'] ?? null,
-                                        'status' => $tindakan['status'] ?? 'Pending', // Asumsi default status
+                                        'status' => $tindakan['status'] ?? 'pending',
                                     ]);
                                 }
                             }
@@ -166,25 +201,42 @@ class NotulenController extends Controller
     /**
      * Tampilkan detail lengkap notulen.
      */
-    public function show($notulenId)
-    {
-        $notulen = Notulen::with(['rapat', 'pokokBahasans.keputusans.tindakans.pic'])->findOrFail($notulenId);
+   public function show($notulenId)
+{
+    $notulen = Notulen::with(['rapat', 'pokokBahasans.keputusans.tindakans.pic'])->findOrFail($notulenId);
+    $rapat = $notulen->rapat;
+
+
+
+     $notulen = Notulen::with(['rapat.pembuat', 'pokokBahasans.keputusans.tindakans.pic'])
+            ->findOrFail($notulenId);
+
         $rapat = $notulen->rapat;
+        $isOwner = $rapat->pembuat_id === Auth::id();
+    // Data rapat & turunannya
+    $bahasan = $notulen->pokokBahasans;
+    $keputusan = collect();
+    $tindakan = collect();
 
-        // Kumpulkan data terstruktur
-        $bahasan = $notulen->pokokBahasans;
-        $keputusan = collect();
-        $tindakan = collect();
-
-        foreach ($bahasan as $pb) {
-            $keputusan = $keputusan->merge($pb->keputusans);
-            foreach ($pb->keputusans as $k) {
-                $tindakan = $tindakan->merge($k->tindakans);
-            }
+    foreach ($bahasan as $pb) {
+        $keputusan = $keputusan->merge($pb->keputusans);
+        foreach ($pb->keputusans as $k) {
+            $tindakan = $tindakan->merge($k->tindakans);
         }
-
-        return view('global.notulen', compact('notulen', 'rapat', 'bahasan', 'keputusan', 'tindakan'));
     }
+
+    // ✅ Ambil daftar user yang hadir dari scan QR
+    $hadirUsers = $rapat->attendances()->with('user')->get()->pluck('user');
+
+    // ✅ Ambil semua anggota undangan + pembuat rapat (yang seharusnya hadir walau belum absensi)
+    $semuaPeserta = collect($rapat->undangan)
+        ->push($rapat->pembuat->email ?? null)
+        ->filter();
+
+    return view('global.notulen', compact(
+        'notulen', 'rapat', 'bahasan', 'keputusan', 'tindakan', 'hadirUsers', 'semuaPeserta', 'isOwner'
+    ));
+}
     
     // --- FUNGSI CREATE CHILD (Tidak diubah) ---
     public function storePokokBahasan(Request $request, $notulenId)
@@ -266,23 +318,27 @@ class NotulenController extends Controller
      */
     public function destroy(Notulen $notulen)
     {
-        try {
-            // Asumsi: Relasi sudah di-set CASCADE ON DELETE di migrasi
-            // Jika tidak, Anda perlu menghapus PokokBahasan, Keputusan, dan Tindakan secara manual
-            // $notulen->pokokBahasans()->delete(); // Ini akan menghapus semua anak jika relasi sudah benar
-            
-            $notulen->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Notulen berhasil dihapus secara permanen.'
-            ], 200);
+       $rapat = $notulen->rapat;
 
-        } catch (\Exception $e) {
-            Log::error('Gagal menghapus notulen: ' . $e->getMessage());
+        if ($rapat->pembuat_id !== Auth::id()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal menghapus notulen. Terjadi kesalahan server.'
+                'message' => 'Anda tidak memiliki izin untuk menghapus notulen ini.'
+            ], 403);
+        }
+
+        try {
+            $notulen->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Notulen berhasil dihapus.'
+            ], 200);
+        } catch (\Throwable $e) {
+            Log::error('❌ Error hapus notulen: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus notulen.'
             ], 500);
         }
     }
@@ -343,4 +399,106 @@ class NotulenController extends Controller
             'notulen' => $notulen,
         ]);
     }
+    
+
+    /**
+     * Generate dan simpan ringkasan notulen
+     */
+    public function generateSummary($notulenId)
+    {
+        try {
+            $notulen = Notulen::with('pokokBahasans.keputusans.tindakans.pic')->findOrFail($notulenId);
+            $rapat = $notulen->rapat;
+
+            // Hanya owner rapat yang boleh generate ringkasan
+            if ($rapat->pembuat_id !== Auth::id()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki izin untuk generate ringkasan notulen ini.'
+                ], 403);
+            }
+
+            // Generate ringkasan menggunakan service
+            $summaryService = new NotulenSummaryService();
+            $summaryService->saveSummary($notulen);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Ringkasan notulen berhasil dibuat!'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error generate summary: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat ringkasan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Tampilkan ringkasan notulen
+     */
+    public function showSummary($notulenId)
+    {
+        try {
+            $notulen = Notulen::findOrFail($notulenId);
+
+            // Jika belum ada ringkasan, generate terlebih dahulu
+            if (!$notulen->ringkasan) {
+                $summaryService = new NotulenSummaryService();
+                $summaryService->saveSummary($notulen);
+                $notulen = Notulen::find($notulenId); // Refresh untuk mendapatkan ringkasan terbaru
+            }
+
+            return view('global.ringkasan-notulen', compact('notulen'));
+        } catch (\Exception $e) {
+            Log::error('Error show summary: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menampilkan ringkasan');
+        }
+    }
+
+    /**
+     * API endpoint untuk mendapatkan ringkasan dalam format JSON
+     */
+    public function getSummaryJson($notulenId)
+    {
+        try {
+            $notulen = Notulen::findOrFail($notulenId);
+
+            $summaryService = new NotulenSummaryService();
+            $summary = $summaryService->generateSummaryJson($notulen);
+
+            return response()->json([
+                'success' => true,
+                'data' => $summary
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error get summary json: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mendapatkan ringkasan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+public function publish($notulenId)
+{
+    $notulen = Notulen::with('rapat')->findOrFail($notulenId);
+    $rapat = $notulen->rapat;
+
+    // hanya owner rapat yg boleh publish
+    if ($rapat->pembuat_id !== Auth::id()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Anda tidak memiliki izin publish notulen ini.'
+        ], 403);
+    }
+
+    $notulen->update(['is_published' => 1]);
+
+    return response()->json([
+        'success' => true,
+        'message' => '✅ Notulen berhasil dipublish, semua undangan sekarang dapat melihat.'
+    ]);
+}
 }
