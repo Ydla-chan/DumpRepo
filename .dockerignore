@@ -3,6 +3,7 @@ node_modules
 vendor
 .env
 .env.*
+!.env.example
 storage/framework/cache/data
 storage/logs
 storage/app/public

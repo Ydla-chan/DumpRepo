@@ -7,7 +7,7 @@ services:
     container_name: meetlog-app
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "7000:80"
     environment:
       APP_ENV: local
       APP_DEBUG: 'true'
@@ -31,7 +31,7 @@ services:
       MYSQL_USER: meetlog
       MYSQL_PASSWORD: secret
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
 
